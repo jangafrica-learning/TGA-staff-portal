@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>TGA Staff Portal</title>
+    <title>TGA Staff Request Portal</title>
 
     <!-- ALLOW ZOOM -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -191,7 +191,7 @@
 
         <!-- SIDEBAR-->
         <div class="sidebar" id="sidebar">
-            <h2>STAFF CENTRE</h2>
+            <h2>STAFF REQUEST PORTAL</h2>
 
             <!-- STAFF REQUEST CENTRE -->
             <button onclick="toggle('s_request')">Submit a Request:</button>
@@ -228,7 +228,7 @@
 
             <div id="content">
                 <div class="center-welcome">
-                    <h3>Welcome to The Gambia Academy Staff Portal</h3>
+                    <h3>Welcome to The Gambia Academy Staff Request Portal</h3>
                     <h5>All staff must request finance through this system. Any request outside the system must not be approved.</h5>
                     <p1>Select an item fromt the menu to continue</p1>
                 </div>
@@ -259,8 +259,8 @@
             closeMenu();
             document.getElementById('content').innerHTML = `
                 <div class="top-bar">
-                    <strong>The Gambia Academy SMS</strong>
-                    <button class="back-btn" onclick="goBack()">← Back</button>
+                    <strong>The Gambia Academy Staff Request Portal</strong>
+                    <button class="back-btn" onclick="goBack()">CLOSE</button>
                 </div>
                 <iframe src="${url}"></iframe>
             `;
@@ -270,7 +270,7 @@
             document.getElementById('content').innerHTML = `
                 <div class="center-welcome">
                     <h2>Welcome Back</h2>
-                    <p>Select an item from the sidebar to continue managing the system.</p>
+                    <p>Select an item from the sidebar menus to continue navigating the system.</p>
                 </div>
             `;
         }
