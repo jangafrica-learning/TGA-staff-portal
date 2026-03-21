@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>TGA Staff Dashboard</title>
+    <title>TGA Teacher's Portal</title>
 
     <!-- ALLOW ZOOM -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -191,7 +191,7 @@
 
         <!-- SIDEBAR-->
         <div class="sidebar" id="sidebar">
-            <h2>Teacher's Space</h2>
+            <h2>Teacher's Portal</h2>
 
 
             <!-- SCHEDULES -->
@@ -242,7 +242,7 @@
             </div>
 
             <!-- LOGOUT & FOOTERS -->
-            <div class="sidebar-logout">
+            <div class="sidebar-logout⏻">
                 <button onclick="logout()">Logout</button>
             </div>
             <div class="sidebar-footer">
@@ -259,12 +259,12 @@
 
             <div id="content">
                 <div class="center-welcome">
-                    <h2>Welcome to The Gambia Academy Staff Portal</h2>
+                    <h2>Welcome to The Gambia Academy Teacher's Portal</h2>
                     <h4>
-                        This space supports planning, accountability,
-                        and operational excellence across the school system.
+                        This portal supports planning & reporting, accountability,
+                        and operational excellence across The Academy.
                     </h4>
-                    <p1>Use the menu to manage schedules, reports and students.</p1>
+                    <p1>Use the sidebar menu to view schedules, curriculum, students & classroom.</p1>
                 </div>
             </div>
         </div>
@@ -294,7 +294,7 @@
             document.getElementById('content').innerHTML = `
                 <div class="top-bar">
                     <strong>The Gambia Academy SMS</strong>
-                    <button class="back-btn" onclick="goBack()">← Back</button>
+                    <button class="back-btn" onclick="goBack()">CLOSE</button>
                 </div>
                 <iframe src="${url}"></iframe>
             `;
@@ -304,7 +304,7 @@
             document.getElementById('content').innerHTML = `
                 <div class="center-welcome">
                     <h2>Welcome Back</h2>
-                    <p>Select an item from the sidebar to continue managing the system.</p>
+                    <p>Select an item from the sidebar menus to continue navigating the system.</p>
                 </div>
             `;
         }
