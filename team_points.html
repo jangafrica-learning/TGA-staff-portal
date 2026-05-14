@@ -9,7 +9,6 @@
     <style>
 
         body {
-
             font-family: Arial, sans-serif;
             background: #f5f5f5;
             padding: 20px;
@@ -17,7 +16,6 @@
         }
 
         .form-container {
-
             max-width: 500px;
             background: white;
             padding: 25px;
@@ -31,7 +29,6 @@
         /* LOGO */
 
         .logo {
-
             max-width: 70px;
             height: auto;
 
@@ -42,7 +39,6 @@
         /* TITLE */
 
         h2 {
-
             text-align: center;
             margin-bottom: 25px;
         }
@@ -50,12 +46,10 @@
         /* FIELDS */
 
         .field {
-
             margin-bottom: 18px;
         }
 
         label {
-
             display: block;
             margin-bottom: 6px;
 
@@ -64,7 +58,6 @@
 
         input,
         select {
-
             width: 100%;
             padding: 10px;
 
@@ -78,20 +71,17 @@
         }
 
         .team-field {
-
             background: #efefef;
         }
 
         /* ERROR */
 
         .error {
-
             border: 2px solid red !important;
             background: #ffe6e6 !important;
         }
 
         .error-text {
-
             color: red;
             font-size: 12px;
             margin-top: 4px;
@@ -100,7 +90,6 @@
         /* BUTTONS */
 
         .buttons {
-
             margin-top: 25px;
 
             display: flex;
@@ -108,7 +97,6 @@
         }
 
         button {
-
             flex: 1;
 
             padding: 12px;
@@ -125,19 +113,16 @@
         }
 
         .save-btn {
-
             background: #4CAF50;
         }
 
         .clear-btn {
-
             background: #f44336;
         }
 
         /* SUCCESS */
 
         .success {
-
             margin-top: 20px;
 
             text-align: center;
@@ -149,12 +134,10 @@
         @media screen and (max-width: 768px) {
 
             .form-container {
-
                 padding: 20px;
             }
 
             button {
-
                 font-size: 14px;
             }
         }
@@ -166,9 +149,8 @@
 
     <div class="form-container">
 
-
         <!-- LOGO -->
-        <img src="logo.png" alt="School Logo" class="logo">        
+        <img src="logo.png" alt="School Logo" class="logo">
 
         <h2>Team Point Entry</h2>
 
@@ -216,6 +198,25 @@
 
             <div class="error-text"
             id="names-error"></div>
+
+        </div>
+
+        <!-- AUTO DEDUCT RULES -->
+
+        <div class="field">
+
+            <label>Auto Deduct Rules</label>
+
+            <select id="autoDeductRules">
+
+                <option value="">
+                    Select Auto Deduct Rule
+                </option>
+
+            </select>
+
+            <div class="error-text"
+            id="autoDeductRules-error"></div>
 
         </div>
 
@@ -295,7 +296,8 @@
     <script>
 
         // APPS SCRIPT
-        const WEB_APP_URL ="https://script.google.com/macros/s/AKfycbyV583zsZvdfLhlC1e9kMyTZBBHcoP8Rvm_AxoVF4JTYbtbSEvz9Kmy96v1YkJ2eXWg/exec";
+        const WEB_APP_URL =
+        "https://script.google.com/macros/s/AKfycbyV583zsZvdfLhlC1e9kMyTZBBHcoP8Rvm_AxoVF4JTYbtbSEvz9Kmy96v1YkJ2eXWg/exec";
 
         // TEAM DATA
         const teams = {
@@ -354,6 +356,21 @@
             "Mr Hadim"
         ];
 
+        // AUTO DEDUCTION RULES
+        const autoDeductRulesData = {
+
+            "BOOKS LEFT IN CLASS": -5,
+            "COMING TO CLASS WITHOUT CORRECT BOOKS": -20,
+            "NOT TAKING PART IN MORNING CLEANING ROUTINES": -10,
+            "NOT WEARING UNIFORM TO ASSEMBLY": -20,
+            "COMING LATE TO ASSEMBLY": -10,
+            "COMING LATE TO CLASS": -10,
+            "SUSPENSION": -100,
+            "INCOMPLETE ROUTINES": -30,
+            "NO HOME WORK": -20,
+            "PHYSICAL ALTERCATION": -30
+        };
+
         // DOM
         const timestamp =
         document.getElementById("timestamp");
@@ -363,6 +380,9 @@
 
         const names =
         document.getElementById("names");
+
+        const autoDeductRules =
+        document.getElementById("autoDeductRules");
 
         const reasons =
         document.getElementById("reasons");
@@ -384,12 +404,12 @@
 
         // LOAD STUDENTS
 
-const allStudents = [
+        const allStudents = [
 
-    ...teams["Bright Stars"],
-    ...teams["United Brains"]
+            ...teams["Bright Stars"],
+            ...teams["United Brains"]
 
-].sort((a, b) => a.localeCompare(b));
+        ].sort((a, b) => a.localeCompare(b));
 
         allStudents.forEach(name => {
 
@@ -415,6 +435,22 @@ const allStudents = [
             signature.appendChild(option);
         });
 
+        // LOAD AUTO DEDUCTION RULES
+
+        Object.entries(autoDeductRulesData)
+        .forEach(([rule, point]) => {
+
+            const option =
+            document.createElement("option");
+
+            option.value = rule;
+
+            option.textContent =
+            `${rule} (${point} POINTS)`;
+
+            autoDeductRules.appendChild(option);
+        });
+
         // AUTO TEAM
 
         names.addEventListener("change", function () {
@@ -435,6 +471,28 @@ const allStudents = [
             teamField.value = "";
         });
 
+        // AUTO FILL REASON AND POINTS
+
+        autoDeductRules.addEventListener(
+        "change", function () {
+
+            const selectedRule =
+            this.value;
+
+            if (selectedRule === "") {
+
+                reasons.value = "";
+                points.value = "";
+
+                return;
+            }
+
+            reasons.value = selectedRule;
+
+            points.value =
+            autoDeductRulesData[selectedRule];
+        });
+
         // CLEAR FORM
 
         function clearForm() {
@@ -444,6 +502,8 @@ const allStudents = [
             teamField.value = "";
 
             names.selectedIndex = 0;
+
+            autoDeductRules.selectedIndex = 0;
 
             reasons.value = "";
 
@@ -490,6 +550,7 @@ const allStudents = [
                 "timestamp",
                 "team",
                 "names",
+                "autoDeductRules",
                 "reasons",
                 "points",
                 "signature"
@@ -533,7 +594,6 @@ const allStudents = [
 
             try {
 
-                // FAST SAVE
                 fetch(WEB_APP_URL, {
 
                     method: "POST",
@@ -549,7 +609,6 @@ const allStudents = [
                     })
                 });
 
-                // SUCCESS MESSAGE
                 const success =
                 document.getElementById(
                     "success-message"
@@ -560,7 +619,6 @@ const allStudents = [
                 success.textContent =
                 "Saved successfully";
 
-                // AUTO RESET
                 clearForm();
 
             } catch (err) {
