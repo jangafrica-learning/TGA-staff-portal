@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lessons</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --blue: #0037ad;
+      --blue-2: #0d47d9;
+      --dark-blue: #001d5c;
+      --dark-blue-2: #012a7a;
+      --bg: #eef3f9;
+      --card: #ffffff;
+      --text: #1d2b53;
+      --muted: #667085;
+      --border: #dfe5ef;
+      --success: #0b6b2f;
+      --error: #b00020;
+      --orange: #f59e0b;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      font-size: 13px;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 1200;
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 900;
+    }
+
+    .sidebar {
+      width: 230px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: linear-gradient(180deg, var(--dark-blue), var(--dark-blue-2));
+      color: white;
+      padding: 22px 16px;
+      z-index: 1000;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-section {
+      text-align: center;
+      margin-bottom: 28px;
+      flex-shrink: 0;
+    }
+
+    .logo {
+      width: 82px;
+      max-height: 82px;
+      object-fit: contain;
+      margin-bottom: 12px;
+    }
+
+    .school-name {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .portal-text {
+      margin-top: 7px;
+      font-size: 12.5px;
+      color: #d9e5ff;
+    }
+
+    .menu {
+      flex: 1;
+    }
+
+    .menu button {
+      width: 100%;
+      border: none;
+      background: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px;
+      border-radius: 8px;
+      margin-bottom: 9px;
+      cursor: pointer;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    .menu button:hover { background: rgba(255,255,255,0.08); }
+    .active-btn { background: var(--blue-2) !important; }
+
+    .footer {
+      margin-top: auto;
+      padding-top: 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .main {
+      margin-left: 230px;
+      padding: 18px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .header-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 12px;
+    }
+
+    .header-box h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #17357a;
+      margin-bottom: 5px;
+    }
+
+    .header-box p {
+      font-size: 12.5px;
+      color: #666;
+    }
+
+    .view-label,
+    .dashboard-hero,
+    .view-hero,
+    .card,
+    .dashboard-panel,
+    .kpi-card,
+    .chart-box,
+    .performance-card,
+    .report-search-panel,
+    .report-stat-card,
+    .report-card-web,
+    .empty-state {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: none;
+    }
+
+    .view-label {
+      padding: 10px 16px;
+      min-width: 170px;
+      text-align: center;
+    }
+
+    .view-label strong {
+      display: block;
+      font-size: 13px;
+      color: var(--blue);
+      margin-bottom: 4px;
+    }
+
+    .view-label span {
+      font-size: 11.5px;
+      color: #666;
+    }
+
+    .dashboard-hero,
+    .view-hero {
+      background: var(--blue);
+      color: white;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dashboard-hero h2,
+    .view-hero h1 {
+      font-size: 17px;
+      margin-bottom: 5px;
+    }
+
+    .dashboard-hero p,
+    .view-hero p {
+      font-size: 12px;
+      color: #e6edff;
+    }
+
+    .dashboard-hero .primary {
+      background: white;
+      color: var(--blue);
+      min-width: 110px;
+    }
+
+    .card,
+    .dashboard-panel,
+    .report-search-panel {
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .topbar,
+    .filters,
+    .form-grid,
+    .button-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .form-grid > div { flex: 1 1 240px; }
+    .full-width { flex: 1 1 100% !important; }
+
+    select,
+    input,
+    textarea {
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid #dce4ef;
+      font-size: 12.5px;
+      min-width: 0;
+      background: white;
+      color: var(--text);
+      width: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: #17357a;
+    }
+
+    .primary,
+    .secondary,
+    .choice-btn {
+      border: none;
+      padding: 9px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    .primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .primary:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #17357a;
+      border: 1px solid #d1d5db;
+    }
+
+    .message {
+      margin-top: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      min-height: 16px;
+    }
+
+    .error { color: var(--error); }
+    .success { color: var(--success); }
+    .muted { color: #666; font-size: 11.5px; margin-top: 5px; }
+
+    .dashboard-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .kpi-card {
+      padding: 13px;
+      border-left: 4px solid var(--blue);
+    }
+
+    .kpi-label {
+      font-size: 11.5px;
+      color: #666;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .kpi-number {
+      font-size: 23px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .dashboard-panel h2,
+    .chart-box h3,
+    .card h3 {
+      font-size: 14px;
+      color: #17357a;
+      margin-bottom: 10px;
+    }
+
+    .performance-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+      gap: 10px;
+    }
+
+    .performance-card {
+      padding: 13px;
+    }
+
+    .performance-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .performance-head h3 {
+      font-size: 14px;
+      color: #17357a;
+    }
+
+    .level-badge {
+      background: #eef3ff;
+      color: var(--blue);
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+
+    .performance-main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .mini-metric {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    .mini-metric span {
+      display: block;
+      color: #666;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .mini-metric strong {
+      color: var(--blue);
+      font-size: 18px;
+    }
+
+    .performance-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .performance-row strong {
+      color: var(--blue);
+    }
+
+    .progress-area { margin-top: 10px; }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #666;
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      height: 7px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 999px;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+    }
+
+    .chart-box {
+      padding: 12px;
+    }
+
+    .chart-wrap {
+      height: 240px;
+      position: relative;
+      width: 100%;
+    }
+
+    .bar-chart-wrap { height: 280px; }
+
+    .chart-subtext {
+      color: #666;
+      font-size: 11.5px;
+      margin-top: -5px;
+      margin-bottom: 8px;
+    }
+
+    .upload-choice {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .choice-btn {
+      background: white;
+      border: 1px solid var(--border);
+      color: #17357a;
+      text-align: left;
+      padding: 14px;
+    }
+
+    .choice-btn i {
+      color: var(--blue);
+      margin-right: 8px;
+    }
+
+    .choice-btn span {
+      display: block;
+      font-size: 11.5px;
+      color: #666;
+      margin-top: 7px;
+      font-weight: 400;
+    }
+
+    .choice-btn.active,
+    .choice-btn:hover {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+    }
+
+    .choice-btn.active i,
+    .choice-btn:hover i,
+    .choice-btn.active span,
+    .choice-btn:hover span {
+      color: white;
+    }
+
+    .form-card { display: none; }
+    .form-card.active { display: block; }
+
+    .report-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .report-stat-card {
+      padding: 13px;
+      border-left: 4px solid var(--blue);
+    }
+
+    .report-stat-card span {
+      display: block;
+      color: #666;
+      font-size: 11.5px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .report-stat-card strong {
+      font-size: 22px;
+      color: var(--blue);
+    }
+
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 10px;
+    }
+
+    .report-card-web {
+      padding: 14px;
+    }
+
+    .report-card-web h3 {
+      color: #17357a;
+      font-size: 14px;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+
+    .report-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .report-badge {
+      background: #eef3f9;
+      color: var(--blue);
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .report-detail {
+      font-size: 12px;
+      margin: 6px 0;
+      color: #333;
+    }
+
+    .report-objective {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 12px;
+      line-height: 1.5;
+      border: 1px solid var(--border);
+    }
+
+    .file-link {
+      display: inline-block;
+      margin-top: 9px;
+      background: var(--blue);
+      color: white;
+      text-decoration: none;
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .empty-state {
+      padding: 24px;
+      text-align: center;
+      color: #666;
+    }
+
+    @media(max-width: 900px) {
+      .header-box,
+      .dashboard-hero,
+      .view-hero,
+      .filters,
+      .form-grid,
+      .button-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .dashboard-kpis { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media(max-width: 768px) {
+      .mobile-menu-btn { display: block; }
+      .mobile-overlay.show { display: block; }
+
+      .sidebar {
+        transform: translateX(-100%);
+        transition: 0.3s;
+      }
+
+      .sidebar.show { transform: translateX(0); }
+
+      .main {
+        margin-left: 0;
+        padding: 65px 10px 16px 10px;
+      }
+    }
+
+    @media(max-width: 480px) {
+      .dashboard-kpis,
+      .performance-grid,
+      .chart-grid,
+      .upload-choice,
+      .reports-grid,
+      .report-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .performance-main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <button class="mobile-menu-btn" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="mobile-overlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar">
+    <div class="logo-section">
+      <img src="logo.png" class="logo" alt="School Logo">
+      <div class="school-name">THE GAMBIA<br>ACADEMY</div>
+      <div class="portal-text">Admin</div>
+    </div>
+
+    <div class="menu">
+      <button class="active-btn" onclick="showSection('overview', this)">
+        <i class="fas fa-chart-line"></i> Report Summary
+      </button>
+
+      <button onclick="showSection('upload', this)">
+        <i class="fas fa-upload"></i> Upload Lesson/Assignment
+      </button>
+
+      <button onclick="showSection('view', this)">
+        <i class="fas fa-folder-open"></i> Lesson Reports
+      </button>
+    </div>
+
+    <div class="footer">
+      Powered by<br>JangAfrika
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <section id="overview" class="section active">
+      <div class="header-box">
+        <div>
+          <h1>Report Summary</h1>
+          <p>Executive summary for lesson uploads, assignments, and subject coverage.</p>
+        </div>
+
+        <div class="view-label">
+          <strong>Live</strong>
+          <span>School Report</span>
+        </div>
+      </div>
+
+      <div class="dashboard-hero">
+        <div>
+          <h2>Academic Delivery</h2>
+          <p>Monitor lesson uploads, assignment activity, and subject coverage.</p>
+        </div>
+
+        <button class="primary" onclick="loadOverview()">
+          <i class="fas fa-rotate"></i> Refresh
+        </button>
+      </div>
+
+      <div id="overviewMessage" class="message"></div>
+      <div id="kpiSummary" class="dashboard-kpis"></div>
+
+      <div class="dashboard-panel">
+        <h2>Class Performance Summary</h2>
+        <dev class="chart-subtext">Key metrics on lesson uploads, assignments, and subject coverage by class.</dev>
+        <div id="classSummaryTable" class="performance-grid"></div>
+      </div>
+
+      <div class="dashboard-panel">
+        <h2>Lesson & Assignment Distribution by Class</h2>
+        <div class="chart-subtext">Compare lesson reports and assignments across all levels.</div>
+        <div class="chart-wrap bar-chart-wrap">
+          <canvas id="classDistributionChart"></canvas>
+        </div>
+      </div>
+
+      <div class="dashboard-panel">
+        <h2>Subject Distribution by Class</h2>
+        <div class="chart-subtext">Breakdown of lesson reports by subject within each level.</div>
+        <div id="chartSummary" class="chart-grid"></div>
+      </div>
+    </section>
+
+    <section id="upload" class="section">
+      <div class="header-box">
+        <div>
+          <h1>Upload</h1>
+          <p>Submit lesson reports and assignments.</p>
+        </div>
+      </div>
+
+      <div class="upload-choice">
+        <button class="choice-btn" id="lessonChoice" onclick="showUploadForm('lesson')">
+          <i class="fas fa-plus"></i> Lesson Report
+          <span>Upload lesson details and lesson file.</span>
+        </button>
+
+        <button class="choice-btn" id="assignmentChoice" onclick="showUploadForm('assignment')">
+          <i class="fas fa-plus"></i> Assignment
+          <span>Upload assignment details and file.</span>
+        </button>
+      </div>
+
+      <div id="lessonFormCard" class="card form-card">
+        <h3>Upload Lesson Report</h3>
+
+        <form id="lessonForm">
+          <div class="form-grid">
+            <div>
+              <label>School Level</label>
+              <select id="lessonLevel" required onchange="updateSubjectOptions('lessonLevel','lessonSubject',false)">
+                <option value="">Select level</option>
+                <option value="JUNIOR">Junior</option>
+                <option value="SENIOR1">Senior 1</option>
+                <option value="SENIOR2">Senior 2</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Subject Sheet</label>
+              <select id="lessonSubject" required>
+                <option value="">Select subject</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Date</label>
+              <input type="date" id="lessonDate" required>
+            </div>
+
+            <div>
+              <label>Class/Group</label>
+              <input type="text" id="lessonClassGroup" required>
+            </div>
+
+            <div>
+              <label>Subject/Course</label>
+              <input type="text" id="lessonSubjectCourse" required>
+            </div>
+
+            <div>
+              <label>Teacher</label>
+              <input type="text" id="lessonTeacher" required>
+            </div>
+
+            <div class="full-width">
+              <label>Topic/Content</label>
+              <textarea id="lessonTopicContent" required></textarea>
+            </div>
+
+            <div class="full-width">
+              <label>Objective(s)</label>
+              <textarea id="lessonObjectives" required></textarea>
+            </div>
+
+            <div class="full-width">
+              <label>Lesson File</label>
+              <input type="file" id="lessonFile" accept=".doc,.docx,.pdf,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.mkv,.mp3,.wav,.m4a,image/*,video/*,audio/*">
+              <div class="muted">Recommended maximum file size: 10MB.</div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="submit" id="lessonSubmitBtn" class="primary">Submit Lesson Report</button>
+            <button type="button" class="secondary" onclick="closeLessonForm()">Close</button>
+          </div>
+
+          <div id="lessonMessage" class="message"></div>
+        </form>
+      </div>
+
+      <div id="assignmentFormCard" class="card form-card">
+        <h3>Upload Assignment</h3>
+
+        <form id="assignmentForm">
+          <div class="form-grid">
+            <div>
+              <label>School Level</label>
+              <select id="assignmentLevel" required onchange="updateSubjectOptions('assignmentLevel','assignmentSubject',false)">
+                <option value="">Select level</option>
+                <option value="JUNIOR">Junior</option>
+                <option value="SENIOR1">Senior 1</option>
+                <option value="SENIOR2">Senior 2</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Subject</label>
+              <select id="assignmentSubject" required>
+                <option value="">Select subject</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Date</label>
+              <input type="date" id="assignmentDate" required>
+            </div>
+
+            <div>
+              <label>Class</label>
+              <input type="text" id="assignmentClass" required>
+            </div>
+
+            <div>
+              <label>Submission Date</label>
+              <input type="date" id="assignmentSubmissionDate" required>
+            </div>
+
+            <div>
+              <label>Assigned Marks</label>
+              <input type="number" id="assignmentMarks" required>
+            </div>
+
+            <div>
+              <label>Teacher</label>
+              <input type="text" id="assignmentTeacher" required>
+            </div>
+
+            <div class="full-width">
+              <label>Content/Question</label>
+              <textarea id="assignmentContentQuestion" required></textarea>
+            </div>
+
+            <div class="full-width">
+              <label>Activities</label>
+              <textarea id="assignmentActivities" required></textarea>
+            </div>
+
+            <div class="full-width">
+              <label>Assignment File</label>
+              <input type="file" id="assignmentFile" accept=".doc,.docx,.pdf,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.mkv,.mp3,.wav,.m4a,image/*,video/*,audio/*">
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="submit" id="assignmentSubmitBtn" class="primary">Submit Assignment</button>
+            <button type="button" class="secondary" onclick="closeAssignmentForm()">Close</button>
+          </div>
+
+          <div id="assignmentMessage" class="message"></div>
+        </form>
+      </div>
+    </section>
+
+    <section id="view" class="section">
+      <div class="view-hero">
+        <div>
+          <h1>View Lesson Reports</h1>
+          <p>Browse and search uploaded lesson reports.</p>
+        </div>
+      </div>
+
+      <div class="report-search-panel">
+        <div class="filters">
+          <div>
+            <label>School Level</label>
+            <select id="viewLevel" onchange="updateSubjectOptions('viewLevel','viewSubject',true)">
+              <option value="">Select level</option>
+              <option value="JUNIOR">Junior</option>
+              <option value="SENIOR1">Senior 1</option>
+              <option value="SENIOR2">Senior 2</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Subject</label>
+            <select id="viewSubject">
+              <option value="ALL">All subjects</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Search</label>
+            <input type="text" id="searchText" placeholder="Search topic, teacher, class...">
+          </div>
+
+          <div class="button-row">
+            <button class="primary" onclick="loadReports()">Search</button>
+            <button class="secondary" onclick="clearReportSearch()">Clear</button>
+          </div>
+        </div>
+
+        <div id="viewMessage" class="message"></div>
+      </div>
+
+      <div id="reportsStats" class="report-stats"></div>
+      <div id="reportsContent" class="reports-grid"></div>
+    </section>
+
+  </main>
+
+  <script>
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzw20Eejvw1Ye9U_JU6fQ0sZF_CBK9oVIxKh6GtDxgUZEAeDitU0BVQt9sui0tKA_wRGQ/exec';
+
+    const LEVELS = {
+      JUNIOR: {
+        subjects: ['MATHS','SCIENCE','BUSINESS','LITERATURE','ENGLISH','HISTORY','OTHERS']
+      },
+      SENIOR1: {
+        subjects: ['MATHS','SCIENCE','BUSINESS','AGRICULTURE','ENGLISH','HISTORY','OTHERS','MUSIC BUSINESS','FASHION & DESIGN']
+      },
+      SENIOR2: {
+        subjects: ['MATHS','SCIENCE','BUSINESS','AGRICULTURE','ENGLISH','HISTORY','OTHERS','MUSIC BUSINESS','FASHION & DESIGN']
+      }
+    };
+
+    const maxFileSize = 10 * 1024 * 1024;
+    let charts = {};
+
+    window.onload = function() {
+      loadOverview();
+    };
+
+    function showSection(sectionId, button) {
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.querySelectorAll('.menu button').forEach(btn => btn.classList.remove('active-btn'));
+      document.getElementById(sectionId).classList.add('active');
+      button.classList.add('active-btn');
+
+      if (sectionId === 'overview') loadOverview();
+      closeSidebar();
+    }
+
+    function showUploadForm(type) {
+      document.getElementById('lessonFormCard').classList.remove('active');
+      document.getElementById('assignmentFormCard').classList.remove('active');
+      document.getElementById('lessonChoice').classList.remove('active');
+      document.getElementById('assignmentChoice').classList.remove('active');
+
+      if (type === 'lesson') {
+        document.getElementById('lessonFormCard').classList.add('active');
+        document.getElementById('lessonChoice').classList.add('active');
+      } else {
+        document.getElementById('assignmentFormCard').classList.add('active');
+        document.getElementById('assignmentChoice').classList.add('active');
+      }
+    }
+
+    function updateSubjectOptions(levelSelectId, subjectSelectId, includeAll) {
+      const level = document.getElementById(levelSelectId).value;
+      const subjectSelect = document.getElementById(subjectSelectId);
+      subjectSelect.innerHTML = '';
+
+      const defaultOption = document.createElement('option');
+      defaultOption.value = includeAll ? 'ALL' : '';
+      defaultOption.textContent = includeAll ? 'All subjects' : 'Select subject';
+      subjectSelect.appendChild(defaultOption);
+
+      if (!level || !LEVELS[level]) return;
+
+      LEVELS[level].subjects.forEach(subject => {
+        const option = document.createElement('option');
+        option.value = subject;
+        option.textContent = subject;
+        subjectSelect.appendChild(option);
+      });
+    }
+
+    document.getElementById('lessonForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('lessonSubmitBtn');
+      const msg = document.getElementById('lessonMessage');
+
+      msg.textContent = '';
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      try {
+        const payload = {
+          recordType: 'LESSON',
+          level: document.getElementById('lessonLevel').value,
+          subjectSheet: document.getElementById('lessonSubject').value,
+          date: document.getElementById('lessonDate').value,
+          classGroup: document.getElementById('lessonClassGroup').value.trim(),
+          subjectCourse: document.getElementById('lessonSubjectCourse').value.trim(),
+          topicContent: document.getElementById('lessonTopicContent').value.trim(),
+          objectives: document.getElementById('lessonObjectives').value.trim(),
+          teacher: document.getElementById('lessonTeacher').value.trim(),
+          file: await getFileData('lessonFile')
+        };
+
+        await postPayload(payload);
+        msg.textContent = 'Lesson report submitted.';
+        msg.className = 'message success';
+        clearLessonForm(false);
+
+      } catch (error) {
+        msg.textContent = error.message || error;
+        msg.className = 'message error';
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Submit Lesson Report';
+    });
+
+    document.getElementById('assignmentForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('assignmentSubmitBtn');
+      const msg = document.getElementById('assignmentMessage');
+
+      msg.textContent = '';
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      try {
+        const payload = {
+          recordType: 'ASSIGNMENT',
+          level: document.getElementById('assignmentLevel').value,
+          date: document.getElementById('assignmentDate').value,
+          className: document.getElementById('assignmentClass').value.trim(),
+          subject: document.getElementById('assignmentSubject').value,
+          contentQuestion: document.getElementById('assignmentContentQuestion').value.trim(),
+          activities: document.getElementById('assignmentActivities').value.trim(),
+          submissionDate: document.getElementById('assignmentSubmissionDate').value,
+          assignedMarks: document.getElementById('assignmentMarks').value,
+          teacher: document.getElementById('assignmentTeacher').value.trim(),
+          file: await getFileData('assignmentFile')
+        };
+
+        await postPayload(payload);
+        msg.textContent = 'Assignment submitted.';
+        msg.className = 'message success';
+        clearAssignmentForm(false);
+
+      } catch (error) {
+        msg.textContent = error.message || error;
+        msg.className = 'message error';
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Submit Assignment';
+    });
+
+    async function postPayload(payload) {
+      const formData = new URLSearchParams();
+      formData.append('payload', JSON.stringify(payload));
+
+      await fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      });
+    }
+
+    async function loadOverview() {
+      const message = document.getElementById('overviewMessage');
+
+      document.getElementById('kpiSummary').innerHTML = '';
+      document.getElementById('classSummaryTable').innerHTML = '';
+      document.getElementById('chartSummary').innerHTML = '';
+
+      Object.values(charts).forEach(chart => chart.destroy());
+      charts = {};
+
+      message.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating dashboard...';
+
+      try {
+        const result = await jsonp(WEB_APP_URL + '?action=overview');
+        if (!result.success) throw new Error(result.message);
+
+        let totalLessons = 0;
+        let totalToday = 0;
+        let totalWeek = 0;
+        let totalMonth = 0;
+        let totalAssignments = 0;
+
+        result.overview.forEach(item => {
+          totalLessons += Number(item.totalLessons || 0);
+          totalToday += Number(item.daily || 0);
+          totalWeek += Number(item.weekly || 0);
+          totalMonth += Number(item.monthly || 0);
+          totalAssignments += Number(item.totalAssignments || 0);
+        });
+
+        renderKpis({ totalLessons, totalToday, totalWeek, totalMonth, totalAssignments });
+        renderClassPerformance(result.overview, totalLessons);
+        renderClassDistributionChart(result.overview);
+        result.overview.forEach(item => addInteractivePieChart(item));
+
+        message.textContent = '';
+
+      } catch (error) {
+        message.textContent = error.message || error;
+        message.className = 'message error';
+      }
+    }
+
+    function renderKpis(data) {
+      document.getElementById('kpiSummary').innerHTML = `
+        <div class="kpi-card"><div class="kpi-label">Total Lessons</div><div class="kpi-number">${data.totalLessons}</div></div>
+        <div class="kpi-card"><div class="kpi-label">Today</div><div class="kpi-number">${data.totalToday}</div></div>
+        <div class="kpi-card"><div class="kpi-label">This Week</div><div class="kpi-number">${data.totalWeek}</div></div>
+        <div class="kpi-card"><div class="kpi-label">This Month</div><div class="kpi-number">${data.totalMonth}</div></div>
+        <div class="kpi-card"><div class="kpi-label">Assignments</div><div class="kpi-number">${data.totalAssignments}</div></div>
+      `;
+    }
+
+    function renderClassPerformance(items, totalLessons) {
+      document.getElementById('classSummaryTable').innerHTML = items.map(item => {
+        const share = totalLessons ? Math.round((Number(item.totalLessons || 0) / totalLessons) * 100) : 0;
+
+        return `
+          <div class="performance-card">
+            <div class="performance-head">
+              <h3>${escapeHtml(item.level)}</h3>
+              <span class="level-badge">${share}%</span>
+            </div>
+
+            <div class="performance-main">
+              <div class="mini-metric"><span>Total Lessons</span><strong>${item.totalLessons}</strong></div>
+              <div class="mini-metric"><span>Assignments</span><strong>${item.totalAssignments}</strong></div>
+            </div>
+
+            <div class="performance-row"><span>Today</span><strong>${item.daily}</strong></div>
+            <div class="performance-row"><span>This Week</span><strong>${item.weekly}</strong></div>
+            <div class="performance-row"><span>This Month</span><strong>${item.monthly}</strong></div>
+
+            <div class="progress-area">
+              <div class="progress-label"><span>Lesson Share</span><span>${share}%</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:${share}%"></div></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderClassDistributionChart(items) {
+      charts.classDistribution = new Chart(document.getElementById('classDistributionChart'), {
+        type: 'bar',
+        data: {
+          labels: items.map(item => item.level),
+          datasets: [
+            {
+              label: 'Total Lessons',
+              data: items.map(item => Number(item.totalLessons || 0)),
+              backgroundColor: '#0037ad',
+              borderRadius: 6
+            },
+            {
+              label: 'Total Assignments',
+              data: items.map(item => Number(item.totalAssignments || 0)),
+              backgroundColor: '#f59e0b',
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, ticks: { precision: 0 } },
+            x: { grid: { display: false } }
+          },
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
+
+    function addInteractivePieChart(item) {
+      const canvasId = 'chart_' + item.levelKey;
+      const card = document.createElement('div');
+      card.className = 'chart-box';
+
+      card.innerHTML = `
+        <h3>${escapeHtml(item.level)} Subject Totals</h3>
+        <div class="chart-wrap"><canvas id="${canvasId}"></canvas></div>
+      `;
+
+      document.getElementById('chartSummary').appendChild(card);
+
+      const labels = Object.keys(item.subjectTotals);
+      const values = labels.map(label => Number(item.subjectTotals[label]) || 0);
+
+      charts[canvasId] = new Chart(document.getElementById(canvasId), {
+        type: 'doughnut',
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: ['#0037ad','#0b6b2f','#f59e0b','#b00020','#7c3aed','#0891b2','#ea580c','#be123c','#64748b'],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '58%',
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
+
+    async function loadReports() {
+      const level = document.getElementById('viewLevel').value;
+      const subject = document.getElementById('viewSubject').value || 'ALL';
+      const search = document.getElementById('searchText').value.trim();
+
+      const container = document.getElementById('reportsContent');
+      const stats = document.getElementById('reportsStats');
+      const message = document.getElementById('viewMessage');
+
+      container.innerHTML = '';
+      stats.innerHTML = '';
+
+      if (!level) {
+        message.textContent = 'Please select a level.';
+        message.className = 'message error';
+        return;
+      }
+
+      message.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading reports...';
+
+      try {
+        const url = WEB_APP_URL + '?action=reports&level=' + encodeURIComponent(level) + '&subject=' + encodeURIComponent(subject) + '&search=' + encodeURIComponent(search);
+        const result = await jsonp(url);
+
+        if (!result.success) throw new Error(result.message);
+
+        message.textContent = '';
+
+        const teacherSet = new Set(result.reports.map(r => r.teacher).filter(Boolean));
+        const subjectSet = new Set(result.reports.map(r => r.subjectSheet).filter(Boolean));
+
+        stats.innerHTML = `
+          <div class="report-stat-card"><span>Total Reports</span><strong>${result.reports.length}</strong></div>
+          <div class="report-stat-card"><span>Teachers</span><strong>${teacherSet.size}</strong></div>
+          <div class="report-stat-card"><span>Subjects</span><strong>${subjectSet.size}</strong></div>
+        `;
+
+        if (result.reports.length === 0) {
+          container.innerHTML = '<div class="empty-state"><h3>No lesson reports found</h3><p>Try changing the search.</p></div>';
+          return;
+        }
+
+        result.reports.forEach(report => {
+          const card = document.createElement('div');
+          card.className = 'report-card-web';
+
+          const fileLink = report.fileUrl
+            ? `<a class="file-link" href="${escapeAttribute(report.fileUrl)}" target="_blank"><i class="fas fa-file-arrow-down"></i> Open File</a>`
+            : `<span class="muted">No file uploaded</span>`;
+
+          card.innerHTML = `
+            <div class="report-badges">
+              <span class="report-badge">${escapeHtml(report.level)}</span>
+              <span class="report-badge">${escapeHtml(report.subjectSheet)}</span>
+              <span class="report-badge">${escapeHtml(report.date)}</span>
+            </div>
+
+            <h3>${escapeHtml(report.topicContent)}</h3>
+            <div class="report-detail"><strong>Class:</strong> ${escapeHtml(report.classGroup)}</div>
+            <div class="report-detail"><strong>Course:</strong> ${escapeHtml(report.subjectCourse)}</div>
+            <div class="report-detail"><strong>Teacher:</strong> ${escapeHtml(report.teacher)}</div>
+            <div class="report-objective"><strong>Objective(s):</strong><br>${escapeHtml(report.objectives)}</div>
+            ${fileLink}
+          `;
+
+          container.appendChild(card);
+        });
+
+      } catch (error) {
+        message.textContent = error.message || error;
+        message.className = 'message error';
+      }
+    }
+
+    function clearReportSearch() {
+      document.getElementById('viewLevel').value = '';
+      document.getElementById('viewSubject').innerHTML = '<option value="ALL">All subjects</option>';
+      document.getElementById('searchText').value = '';
+      document.getElementById('reportsContent').innerHTML = '';
+      document.getElementById('reportsStats').innerHTML = '';
+      document.getElementById('viewMessage').textContent = '';
+    }
+
+    async function getFileData(inputId) {
+      const input = document.getElementById(inputId);
+      const file = input.files[0];
+
+      if (!file) return null;
+
+      if (file.size > maxFileSize) throw new Error('File is too large. Maximum allowed size is 10MB.');
+
+      return readFileAsBase64(file);
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = event => {
+          resolve({
+            fileName: file.name,
+            mimeType: file.type || 'application/octet-stream',
+            base64: event.target.result.split(',')[1]
+          });
+        };
+
+        reader.onerror = () => reject(new Error('Could not read the selected file.'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function jsonp(url) {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'jsonpCallback_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+
+        window[callbackName] = data => {
+          delete window[callbackName];
+          script.remove();
+          resolve(data);
+        };
+
+        const script = document.createElement('script');
+
+        script.onerror = () => {
+          delete window[callbackName];
+          script.remove();
+          reject(new Error('JSONP request failed.'));
+        };
+
+        script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
+        document.body.appendChild(script);
+      });
+    }
+
+    async function postPayload(payload) {
+      const formData = new URLSearchParams();
+      formData.append('payload', JSON.stringify(payload));
+
+      await fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      });
+    }
+
+    function clearLessonForm(clearMessage = true) {
+      document.getElementById('lessonForm').reset();
+      document.getElementById('lessonSubject').innerHTML = '<option value="">Select subject</option>';
+
+      if (clearMessage) {
+        document.getElementById('lessonMessage').textContent = '';
+        document.getElementById('lessonMessage').className = 'message';
+      }
+    }
+
+    function clearAssignmentForm(clearMessage = true) {
+      document.getElementById('assignmentForm').reset();
+      document.getElementById('assignmentSubject').innerHTML = '<option value="">Select subject</option>';
+
+      if (clearMessage) {
+        document.getElementById('assignmentMessage').textContent = '';
+        document.getElementById('assignmentMessage').className = 'message';
+      }
+    }
+
+    function closeLessonForm() {
+      clearLessonForm();
+      document.getElementById('lessonFormCard').classList.remove('active');
+      document.getElementById('lessonChoice').classList.remove('active');
+    }
+
+    function closeAssignmentForm() {
+      clearAssignmentForm();
+      document.getElementById('assignmentFormCard').classList.remove('active');
+      document.getElementById('assignmentChoice').classList.remove('active');
+    }
+
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('show');
+      document.querySelector('.mobile-overlay').classList.toggle('show');
+    }
+
+    function closeSidebar() {
+      document.querySelector('.sidebar').classList.remove('show');
+      document.querySelector('.mobile-overlay').classList.remove('show');
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function escapeAttribute(value) {
+      return String(value || '').replaceAll('"', '&quot;');
+    }
+  </script>
+</body>
+</html>
