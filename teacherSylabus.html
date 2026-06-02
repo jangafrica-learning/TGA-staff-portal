@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Syllabus</title>
+
+<style>
+:root{
+  --blue-dark:#001d5c;
+  --blue:#0d47d9;
+  --bg:#eef4fb;
+  --card:#ffffff;
+  --border:#dbe4ef;
+  --text:#111827;
+  --muted:#64748b;
+  --danger:#dc2626;
+  --green:#16a34a;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:13px;
+  overflow:hidden;
+}
+
+.menu-bar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  background:var(--blue-dark);
+  padding:10px 15px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  z-index:1000;
+  box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+
+.menu-bar button{
+  border:none;
+  border-radius:8px;
+  padding:10px 14px;
+  background:white;
+  color:#17357a;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.menu-bar button:hover{
+  background:#eef3ff;
+}
+
+.menu-bar button.active{
+  background:var(--blue)!important;
+  color:white!important;
+}
+
+.container{
+  height:100vh;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:82px 20px 20px;
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:18px;
+}
+
+.page-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+  gap:12px;
+}
+
+.page-header h2{
+  margin:0;
+  color:var(--blue-dark);
+  font-size:18px;
+}
+
+.page-header p{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+button{
+  height:38px;
+  border:none;
+  border-radius:8px;
+  padding:0 14px;
+  cursor:pointer;
+  background:var(--blue);
+  color:white;
+  font-weight:700;
+  font-size:13px;
+}
+
+button:hover{
+  background:var(--blue-dark);
+}
+
+.btn-muted{
+  background:#e5e7eb;
+  color:var(--blue-dark);
+}
+
+.hidden{
+  display:none!important;
+}
+
+.search-row{
+  display:flex;
+  gap:10px;
+  margin-bottom:18px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+input,
+select{
+  width:100%;
+  max-width:280px;
+  padding:9px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:13px;
+  background:white;
+}
+
+.message-box{
+  display:none;
+  margin:0 0 15px;
+  padding:10px 12px;
+  border-radius:8px;
+  font-weight:700;
+  font-size:13px;
+}
+
+.message-error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b;
+  border:1px solid #fecaca;
+}
+
+.message-success{
+  display:block;
+  background:#dcfce7;
+  color:#166534;
+  border:1px solid #bbf7d0;
+}
+
+.message-info{
+  display:block;
+  background:#dbeafe;
+  color:#1e40af;
+  border:1px solid #bfdbfe;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  border:1px solid var(--border);
+  font-size:13px;
+}
+
+th{
+  background:#f8fafc;
+  color:var(--blue-dark);
+  text-align:left;
+  padding:11px;
+  border-bottom:1px solid var(--border);
+  font-size:12px;
+}
+
+td{
+  padding:11px;
+  border-bottom:1px solid var(--border);
+  vertical-align:top;
+  color:#000;
+  font-size:13px;
+}
+
+.table-wrapper{
+  width:100%;
+  overflow-x:auto;
+}
+
+.action-btn{
+  height:34px;
+  border:none;
+  border-radius:8px;
+  padding:0 12px;
+  background:var(--blue);
+  color:white;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.status-pending{
+  background:#fff2cc;
+  font-weight:bold;
+  color:#7a5700;
+  text-align:center;
+}
+
+.status-complete{
+  background:#d9ead3;
+  font-weight:bold;
+  color:#0b6b2f;
+  text-align:center;
+}
+
+.badge-complete,
+.badge-approved,
+.status-badge{
+  display:inline-block;
+  padding:5px 12px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:700;
+}
+
+.badge-complete,
+.status-badge{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.badge-approved{
+  background:#dbeafe;
+  color:#1d4ed8;
+}
+
+.switch{
+  position:relative;
+  display:inline-block;
+  width:38px;
+  height:20px;
+}
+
+.switch input{
+  opacity:0;
+  width:0;
+  height:0;
+}
+
+.slider{
+  position:absolute;
+  cursor:pointer;
+  inset:0;
+  background-color:#d1d5db;
+  transition:.3s;
+  border-radius:34px;
+}
+
+.slider:before{
+  position:absolute;
+  content:"";
+  height:14px;
+  width:14px;
+  left:3px;
+  top:3px;
+  background:white;
+  transition:.3s;
+  border-radius:50%;
+}
+
+.switch input:checked + .slider{
+  background-color:#16a34a;
+}
+
+.switch input:checked + .slider:before{
+  transform:translateX(18px);
+}
+
+.completion-label{
+  display:block;
+  margin-top:2px;
+  font-size:9px;
+  font-weight:700;
+  color:#64748b;
+  text-align:center;
+}
+
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:16px;
+}
+
+.subject-card,
+.feedback-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+}
+
+.subject-card strong,
+.feedback-card strong{
+  display:block;
+  color:var(--blue-dark);
+  font-size:15px;
+  margin-bottom:8px;
+}
+
+.subject-card p,
+.feedback-card p{
+  font-size:13px;
+  color:#475569;
+  line-height:1.55;
+  margin-bottom:7px;
+}
+
+.feedback-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(220px,1fr));
+  gap:12px;
+  margin-top:12px;
+}
+
+.feedback-item label{
+  display:block;
+  font-size:11px;
+  font-weight:700;
+  color:#64748b;
+  margin-bottom:4px;
+}
+
+.feedback-item p{
+  background:#f8fafc;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:9px;
+  min-height:38px;
+  color:#1d2b53;
+}
+
+@media(max-width:800px){
+  .menu-bar{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    white-space:nowrap;
+    padding:8px;
+  }
+
+  .menu-bar button{
+    flex-shrink:0;
+    font-size:11.5px;
+    padding:9px 12px;
+  }
+
+  .container{
+    padding:62px 12px 12px;
+  }
+
+  .search-row,
+  .page-header{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  input,
+  select{
+    max-width:none;
+  }
+
+  th,
+  td{
+    padding:9px;
+    font-size:12px;
+  }
+
+  .feedback-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="menu-bar">
+  <button id="allBtn" class="active" onclick="setView('all')">My Topics</button>
+  <button id="approvedBtn" onclick="setView('approved')">Approved Topics</button>
+  <button id="assignedBtn" onclick="setView('assigned')">My Subjects</button>
+  <button id="feedbackBtn" onclick="setView('feedback')">Feedback</button>
+</div>
+
+<main class="container">
+
+<section class="card">
+  <div class="page-header">
+    <div>
+      <h2>Teacher Syllabus Tracker</h2>
+      <p>Teachers can mark topics complete, view assigned subjects, and view feedback.</p>
+    </div>
+    <div>
+      <strong id="currentViewLabel">My Topics</strong><br>
+      <span id="currentSubjectLabel">Select teacher first</span>
+    </div>
+  </div>
+
+  <div class="search-row">
+    <select id="teacherSelect">
+      <option value="">Loading teachers...</option>
+    </select>
+
+    <select id="subjectSelect">
+      <option value="">Select teacher first</option>
+    </select>
+
+    <input type="text" id="searchBox" placeholder="Search topic, subtopic, objective...">
+  </div>
+
+  <div id="message" class="message-box"></div>
+</section>
+
+<section class="card" id="syllabusBox">
+  <div class="table-wrapper">
+    <table id="syllabusTable">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card hidden" id="assignedBox">
+  <div id="assignedSubjectsContent"></div>
+</section>
+
+<section class="card hidden" id="feedbackBox">
+  <div class="search-row">
+    <input id="feedbackSearch" placeholder="Search feedback...">
+    <button class="btn-muted" onclick="filterFeedback()">Search</button>
+    <button class="btn-muted" onclick="clearFeedbackSearch()">Clear</button>
+  </div>
+
+  <div id="feedbackContent"></div>
+</section>
+
+</main>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbzTN96acrndi2oiibHPvPu3tpHJJEx2xNDQa_f0JhChg3XlPFr5qIk8gD3H_ZLPo-8fKA/exec";
+
+let currentData = [];
+let currentView = "all";
+let teachersData = [];
+let assignmentsData = [];
+let assignedSubjects = [];
+let feedbackData = [];
+
+function jsonpRequest(url){
+  return new Promise((resolve,reject)=>{
+    const callbackName =
+      "jsonpCallback_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
+
+    const script = document.createElement("script");
+    const separator = url.includes("?") ? "&" : "?";
+
+    window[callbackName] = function(data){
+      resolve(data);
+      document.body.removeChild(script);
+      delete window[callbackName];
+    };
+
+    script.src = url + separator + "callback=" + callbackName;
+    script.onerror = reject;
+    document.body.appendChild(script);
+  });
+}
+
+async function postToApi(payload){
+  await fetch(API,{
+    method:"POST",
+    mode:"no-cors",
+    body:JSON.stringify(payload)
+  });
+}
+
+function showMessage(text,type=""){
+  const box = document.getElementById("message");
+
+  if(!text){
+    box.textContent = "";
+    box.className = "message-box";
+    return;
+  }
+
+  box.textContent = text;
+
+  if(type === "error"){
+    box.className = "message-box message-error";
+  }else if(type === "success"){
+    box.className = "message-box message-success";
+  }else{
+    box.className = "message-box message-info";
+  }
+}
+
+function formatDateOnly(dateValue){
+  if(!dateValue) return "—";
+
+  const date = new Date(dateValue);
+
+  if(isNaN(date.getTime())){
+    return dateValue;
+  }
+
+  return date.toLocaleDateString("en-GB");
+}
+
+async function loadTeacherPortalData(){
+  try{
+    showMessage("Loading teacher data...","info");
+
+    teachersData = await jsonpRequest(API + "?action=teachers");
+    assignmentsData = await jsonpRequest(API + "?action=teacherAssignments");
+
+    populateTeacherDropdown();
+
+    showMessage("");
+
+  }catch(error){
+    console.error(error);
+    showMessage("Failed to load teacher data. Please check the Apps Script deployment.","error");
+  }
+}
+
+function populateTeacherDropdown(){
+  const select = document.getElementById("teacherSelect");
+
+  select.innerHTML = `<option value="">Select Teacher</option>`;
+
+  const activeTeachers = teachersData.filter(teacher =>
+    String(teacher.Status || "Active").toLowerCase() === "active"
+  );
+
+  activeTeachers.forEach(teacher=>{
+    const teacherName = teacher["Teacher Name"];
+    const option = document.createElement("option");
+
+    option.value = teacherName;
+    option.textContent = teacherName;
+
+    select.appendChild(option);
+  });
+}
+
+function loadAssignedSubjectsForTeacher(){
+  const teacherName = document.getElementById("teacherSelect").value;
+  const subjectSelect = document.getElementById("subjectSelect");
+
+  assignedSubjects = [];
+  subjectSelect.innerHTML = `<option value="">Select Subject</option>`;
+
+  if(!teacherName){
+    document.getElementById("currentSubjectLabel").textContent = "Select teacher first";
+    currentData = [];
+    renderTable([]);
+    renderAssignedSubjects([]);
+    return;
+  }
+
+  const teacherAssignments = assignmentsData.filter(item =>
+    String(item["Teacher Name"]).trim().toLowerCase() === teacherName.toLowerCase() &&
+    String(item.Status || "Active").trim().toLowerCase() === "active"
+  );
+
+  const uniqueSubjects = [];
+
+  teacherAssignments.forEach(item=>{
+    const subject = item.Subject || "";
+    if(subject && !uniqueSubjects.includes(subject)){
+      uniqueSubjects.push(subject);
+    }
+  });
+
+  assignedSubjects = uniqueSubjects;
+
+  uniqueSubjects.forEach(subject=>{
+    const option = document.createElement("option");
+    option.value = subject;
+    option.textContent = subject;
+    subjectSelect.appendChild(option);
+  });
+
+  document.getElementById("currentSubjectLabel").textContent =
+    uniqueSubjects.length
+      ? teacherName + " • " + uniqueSubjects.length + " subject(s)"
+      : teacherName + " • No active subject assigned";
+
+  renderAssignedSubjects(teacherAssignments);
+
+  if(uniqueSubjects.length > 0){
+    subjectSelect.value = uniqueSubjects[0];
+
+    if(currentView === "all" || currentView === "approved"){
+      loadData();
+    }
+  }else{
+    renderTable([]);
+  }
+
+  if(currentView === "feedback"){
+    loadFeedback();
+  }
+}
+
+function setView(view){
+  currentView = view;
+
+  document.getElementById("allBtn").classList.remove("active");
+  document.getElementById("approvedBtn").classList.remove("active");
+  document.getElementById("assignedBtn").classList.remove("active");
+  document.getElementById("feedbackBtn").classList.remove("active");
+
+  document.getElementById("syllabusBox").classList.add("hidden");
+  document.getElementById("assignedBox").classList.add("hidden");
+  document.getElementById("feedbackBox").classList.add("hidden");
+
+  if(view === "all"){
+    document.getElementById("allBtn").classList.add("active");
+    document.getElementById("currentViewLabel").textContent = "My Topics";
+    document.getElementById("syllabusBox").classList.remove("hidden");
+    loadData();
+  }
+
+  else if(view === "approved"){
+    document.getElementById("approvedBtn").classList.add("active");
+    document.getElementById("currentViewLabel").textContent = "Approved Topics";
+    document.getElementById("syllabusBox").classList.remove("hidden");
+    loadData();
+  }
+
+  else if(view === "assigned"){
+    document.getElementById("assignedBtn").classList.add("active");
+    document.getElementById("currentViewLabel").textContent = "My Subjects";
+    document.getElementById("assignedBox").classList.remove("hidden");
+    loadAssignedSubjectsForTeacher();
+  }
+
+  else if(view === "feedback"){
+    document.getElementById("feedbackBtn").classList.add("active");
+    document.getElementById("currentViewLabel").textContent = "Feedback";
+    document.getElementById("feedbackBox").classList.remove("hidden");
+    loadFeedback();
+  }
+}
+
+async function loadData(){
+  try{
+    const teacherName = document.getElementById("teacherSelect").value;
+    const subject = document.getElementById("subjectSelect").value;
+
+    if(!teacherName){
+      showMessage("Select your teacher name first.","error");
+      renderTable([]);
+      return;
+    }
+
+    if(!subject){
+      showMessage("No subject selected. Confirm that subjects have been assigned to this teacher.","error");
+      renderTable([]);
+      return;
+    }
+
+    if(!assignedSubjects.includes(subject)){
+      showMessage("This subject is not assigned to the selected teacher.","error");
+      renderTable([]);
+      return;
+    }
+
+    document.getElementById("currentSubjectLabel").textContent =
+      teacherName + " • " + subject;
+
+    showMessage("Loading data...","info");
+
+    const action = currentView === "approved" ? "approved" : "syllabus";
+
+    currentData = await jsonpRequest(
+      API +
+      "?action=" + action +
+      "&subject=" + encodeURIComponent(subject)
+    );
+
+    renderTable(currentData);
+    showMessage("");
+
+  }catch(error){
+    console.error(error);
+    showMessage("Failed to load data.","error");
+  }
+}
+
+function renderTable(data){
+  const thead = document.querySelector("#syllabusTable thead");
+  const tbody = document.querySelector("#syllabusTable tbody");
+
+  thead.innerHTML = "";
+  tbody.innerHTML = "";
+
+  if(!data || data.length === 0){
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="20" style="text-align:center;padding:30px;">
+          No records found.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  let headers = Object.keys(data[0]).filter(header=>{
+    const cleanHeader = header.toLowerCase().trim();
+
+    return (
+      header !== "rowNumber" &&
+      cleanHeader !== "approval"
+    );
+  });
+
+  if(!headers.includes("Status")){
+    headers.push("Status");
+  }
+
+  const headerRow = document.createElement("tr");
+
+  headers.forEach(header=>{
+    const th = document.createElement("th");
+    th.textContent = header;
+    headerRow.appendChild(th);
+  });
+
+  if(currentView === "all"){
+    const actionHeader = document.createElement("th");
+    actionHeader.textContent = "Action";
+    headerRow.appendChild(actionHeader);
+  }
+
+  thead.appendChild(headerRow);
+
+  data.forEach(row=>{
+    const tr = document.createElement("tr");
+
+    headers.forEach(header=>{
+      const td = document.createElement("td");
+      const cleanHeader = header.toLowerCase().trim();
+      const value = row[header] || "";
+
+      if(cleanHeader === "completion" || cleanHeader === "completion status"){
+        if(currentView === "approved"){
+          td.innerHTML = `<span class="badge-complete">Completed</span>`;
+        }else{
+          const checked = value === "Completed" ? "checked" : "";
+          const label = value === "Completed" ? "ON" : "OFF";
+
+          td.innerHTML = `
+            <label class="switch">
+              <input type="checkbox" id="completion-${row.rowNumber}" ${checked}>
+              <span class="slider"></span>
+            </label>
+            <span class="completion-label">${label}</span>
+          `;
+        }
+      }
+
+      else if(cleanHeader === "status"){
+        if(currentView === "approved"){
+          td.innerHTML = `<span class="badge-complete">Complete</span>`;
+        }else{
+          const status = row.Status || "Pending";
+
+          td.textContent = status;
+
+          if(status === "Complete"){
+            td.className = "status-complete";
+          }else{
+            td.className = "status-pending";
+          }
+        }
+      }
+
+      else{
+        td.textContent = value;
+      }
+
+      tr.appendChild(td);
+    });
+
+    if(currentView === "all"){
+      const actionTd = document.createElement("td");
+
+      actionTd.innerHTML = `
+        <button class="action-btn" onclick="saveRow(${row.rowNumber})">
+          Save
+        </button>
+      `;
+
+      tr.appendChild(actionTd);
+    }
+
+    tbody.appendChild(tr);
+  });
+}
+
+async function saveRow(rowNumber){
+  try{
+    const subject = document.getElementById("subjectSelect").value;
+
+    const completionChecked =
+      document.getElementById("completion-" + rowNumber)?.checked;
+
+    const completion =
+      completionChecked
+        ? "Completed"
+        : "Not Completed";
+
+    showMessage("Saving completion status...","info");
+
+    await postToApi({
+      subject,
+      rowNumber,
+      completion
+    });
+
+    showMessage("Completion saved.","success");
+
+    setTimeout(()=>{
+      showMessage("");
+      loadData();
+    },700);
+
+  }catch(error){
+    console.error(error);
+    showMessage("Failed to save completion status.","error");
+  }
+}
+
+function filterTable(){
+  const search = document.getElementById("searchBox")
+    .value
+    .toLowerCase();
+
+  const filtered = currentData.filter(row=>{
+    return Object.values(row)
+      .join(" ")
+      .toLowerCase()
+      .includes(search);
+  });
+
+  if(currentView === "feedback"){
+    filterFeedback();
+  }else{
+    renderTable(filtered);
+  }
+}
+
+function renderAssignedSubjects(assignments){
+  const box = document.getElementById("assignedSubjectsContent");
+  const teacherName = document.getElementById("teacherSelect").value;
+
+  if(!teacherName){
+    box.innerHTML = `
+      <p style="font-size:13px;color:#666;">
+        Select a teacher to view assigned subjects.
+      </p>
+    `;
+    return;
+  }
+
+  if(!assignments || assignments.length === 0){
+    box.innerHTML = `
+      <p style="font-size:13px;color:#666;">
+        No active subject has been assigned to ${teacherName}.
+      </p>
+    `;
+    return;
+  }
+
+  let html = `<div class="cards-grid">`;
+
+  assignments.forEach((item,index)=>{
+    html += `
+      <div class="subject-card">
+        <strong>${index + 1}. ${item.Subject || "No Subject"}</strong>
+        <p><b>Class:</b> ${item.Class || "—"}</p>
+        <p><b>Assigned By:</b> ${item["Assigned By"] || "—"}</p>
+        <p><b>Date:</b> ${formatDateOnly(item.Date)}</p>
+        <span class="status-badge">${item.Status || "Active"}</span>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+
+  box.innerHTML = html;
+}
+
+async function loadFeedback(){
+  try{
+    const teacherName = document.getElementById("teacherSelect").value;
+
+    if(!teacherName){
+      document.getElementById("feedbackContent").innerHTML = `
+        <p style="font-size:13px;color:#666;">
+          Select your teacher name to view feedback.
+        </p>
+      `;
+      return;
+    }
+
+    const allFeedback = await jsonpRequest(API + "?action=feedback");
+
+    feedbackData = allFeedback.filter(item =>
+      String(item["Teacher Name"] || "").trim().toLowerCase() ===
+      teacherName.toLowerCase()
+    );
+
+    renderFeedback(feedbackData);
+
+  }catch(error){
+    console.error(error);
+    document.getElementById("feedbackContent").innerHTML = `
+      <p class="message-error" style="padding:10px;border-radius:8px;">
+        Failed to load feedback.
+      </p>
+    `;
+  }
+}
+
+function renderFeedback(data){
+  const box = document.getElementById("feedbackContent");
+
+  if(!data || data.length === 0){
+    box.innerHTML = `
+      <p style="font-size:13px;color:#666;">
+        No feedback found for the selected teacher.
+      </p>
+    `;
+    return;
+  }
+
+  let html = `<div class="cards-grid">`;
+
+  data.forEach(row=>{
+    html += `
+      <div class="feedback-card">
+        <strong>${row["Subject"] || "No Subject"} • ${row["Class"] || "No Class"}</strong>
+        <p><b>Date:</b> ${formatDateOnly(row["Date"])}</p>
+        <p><b>Topic:</b> ${row["Topic"] || "—"}</p>
+
+        <div class="feedback-grid">
+          <div class="feedback-item">
+            <label>Curriculum</label>
+            <p>${row["Curriculum"] || "—"}</p>
+          </div>
+
+          <div class="feedback-item">
+            <label>Alignment</label>
+            <p>${row["Curriculum Alignment"] || "—"}</p>
+          </div>
+
+          <div class="feedback-item">
+            <label>Weakness</label>
+            <p>${row["Weakness"] || "—"}</p>
+          </div>
+
+          <div class="feedback-item">
+            <label>Adjustment</label>
+            <p>${row["Actions for Adjustment"] || "—"}</p>
+          </div>
+
+          <div class="feedback-item">
+            <label>Effectiveness</label>
+            <p>${row["Teaching & Learning Effectiveness"] || "—"} / 5</p>
+          </div>
+
+          <div class="feedback-item">
+            <label>Next Schedule</label>
+            <p>${formatDateOnly(row["Next Schedule"])}</p>
+          </div>
+        </div>
+
+        <div class="feedback-item" style="margin-top:12px;">
+          <label>Observer’s Comments</label>
+          <p>${row["Observer’s Comments"] || "—"}</p>
+        </div>
+
+        <p style="margin-top:10px;color:#0037ad;font-weight:700;">
+          By: ${row["By"] || "—"}
+        </p>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+
+  box.innerHTML = html;
+}
+
+function filterFeedback(){
+  const search = document.getElementById("feedbackSearch")
+    .value
+    .toLowerCase();
+
+  const filtered = feedbackData.filter(row =>
+    Object.values(row)
+      .join(" ")
+      .toLowerCase()
+      .includes(search)
+  );
+
+  renderFeedback(filtered);
+}
+
+function clearFeedbackSearch(){
+  document.getElementById("feedbackSearch").value = "";
+  renderFeedback(feedbackData);
+}
+
+document
+  .getElementById("teacherSelect")
+  .addEventListener("change", loadAssignedSubjectsForTeacher);
+
+document
+  .getElementById("subjectSelect")
+  .addEventListener("change", loadData);
+
+document
+  .getElementById("searchBox")
+  .addEventListener("keyup", filterTable);
+
+document
+  .getElementById("feedbackSearch")
+  .addEventListener("keyup", filterFeedback);
+
+loadTeacherPortalData();
+</script>
+
+</body>
+</html>
