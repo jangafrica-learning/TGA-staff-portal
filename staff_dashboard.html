@@ -2,336 +2,701 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>TGA Teacher's Portal</title>
+<meta charset="UTF-8">
+<title>TGA Teacher Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- ALLOW ZOOM -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+body{
+    font-family:Arial,sans-serif;
+    background:#eef3f9;
+    color:#1d2b53;
+    overflow:hidden;
+}
 
-        body {
-            margin: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-            background: #f4f6f8;
-            overflow-x: hidden;
-        }
+/* TOP BAR */
 
-        .wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
+.topbar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:80px;
+    background:linear-gradient(90deg,#001d5c,#012a7a);
+    color:white;
+    z-index:1000;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:0 24px;
+    box-shadow:0 4px 16px rgba(0,0,0,.15);
+}
 
-        /* OVERLAY (MOBILE ONLY) */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.4);
-            display: none;
-            z-index: 9;
-        }
+.menu-btn{
+    border:none;
+    background:rgba(255,255,255,.14);
+    color:white;
+    border-radius:14px;
+    width:50px;
+    height:50px;
+    cursor:pointer;
+    font-size:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
 
-        .overlay.active {
-            display: block;
-        }
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+    flex:1;
+}
 
-        /* SIDEBAR */
-        .sidebar {
-            width: 260px;
-            background: #023b5e;
-            color: #fff;
-            padding: 15px;
-            position: fixed;
-            top: 0;
-            left: -260px;
-            height: 100vh;
-            transition: left 0.3s ease;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
+.logo{
+    width:42px;
+    height:42px;
+    object-fit:contain;
+    flex-shrink:0;
+}
 
-        .sidebar.active {
-            left: 0;
-        }
+.school-name{
+    font-size:13px;
+    font-weight:800;
+    white-space:nowrap;
+}
 
-        .sidebar h2 {
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
+.header-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-shrink:0;
+}
 
-        .sidebar button {
-            width: 100%;
-            background: none;
-            border: none;
-            color: #fff;
-            text-align: left;
-            padding: 10px;
-            font-size: 15px;
-            cursor: pointer;
-        }
+.refresh-btn{
+    height:42px;
+    padding:0 16px;
+    border:none;
+    border-radius:10px;
+    background:rgba(255,255,255,.12);
+    color:white;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+}
 
-        .sidebar button:hover {
-            background: #f301ef;
-        }
+.refresh-btn:hover{
+    background:rgba(255,255,255,.22);
+}
 
-        .submenu {
-            display: none;
-            padding-left: 10px;
-        }
+.time-box{
+    width:180px;
+    min-width:180px;
+    max-width:180px;
+    background:rgba(255,255,255,.12);
+    border-radius:12px;
+    padding:8px 12px;
+    text-align:center;
+}
 
-        .submenu button {
-            font-size: 14px;
-            background: #02799d;
-            margin-bottom: 4px;
-        }
+#liveTime{
+    font-size:14px;
+    font-weight:800;
+}
 
-        .sidebar-footer {
-            margin-top: auto;
-            padding: 15px 10px;
-            font-size: 13px;
-            text-align: center;
-            opacity: 0.9;
-        }
+#todayDate{
+    font-size:10px;
+    color:#d9e5ff;
+    margin-top:2px;
+}
 
-        /* MAIN */
-        .main {
-            flex: 1;
-            width: 100%;
-        }
+/* VERTICAL MENU */
 
-        /* TOP BAR */
-        .top-bar {
-            height: 60px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0 20px;
-            background: #f4f6f8;
-        }
+.top-menu{
+    position:fixed;
+    top:80px;
+    left:0;
+    width:320px;
+    height:calc(100vh - 80px);
+    background:white;
+    z-index:999;
+    display:none;
+    padding:14px;
+    box-shadow:4px 0 18px rgba(0,0,0,.14);
+    overflow-y:auto;
+    overflow-x:hidden;
+}
 
-        .hamburger {
-            background: #0b3d2e;
-            color: #fff;
-            border: none;
-            width: 44px;
-            height: 44px;
-            font-size: 22px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+.top-menu.show{
+    display:block;
+}
 
-        /* CENTER WELCOME */
-        .center-welcome {
-            min-height: calc(100vh - 60px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-        }
+.menu-search{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid #dce4ef;
+    border-radius:10px;
+    font-size:12px;
+    margin-bottom:12px;
+    outline:none;
+}
 
-        .center-welcome h2 {
-            font-size: clamp(22px, 4vw, 28px);
-            color: #0b3d2e;
-            margin-bottom: 12px;
-        }
+.menu-search:focus{
+    border-color:#0037ad;
+}
 
-        .center-welcome p {
-            max-width: 600px;
-            line-height: 1.6;
-            color: #444;
-            font-size: clamp(14px, 2.5vw, 16px);
-        }
+.menu-group{
+    width:100%;
+    margin-bottom:8px;
+}
 
-        iframe {
-            width: 100%;
-            height: calc(100vh - 60px);
-            border: none;
-            background: #fff;
-        }
+.menu-main{
+    width:100%;
+    border:none;
+    border-radius:10px;
+    padding:12px 14px;
+    background:#f4f7fc;
+    color:#17357a;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+    text-align:left;
+}
 
-        .back-btn {
-            background: #0b3d2e;
-            color: #fff;
-            border: none;
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
+.menu-main:hover,
+.menu-main.active-section{
+    background:#0d47d9;
+    color:white;
+}
 
-        /* DESKTOP MODE */
-        @media (min-width: 1024px) {
-            .sidebar {
-                left: 0;
-                position: relative;
-            }
+.submenu{
+    display:none;
+    width:100%;
+    margin-top:5px;
+    background:#fafcff;
+    border-left:3px solid #0d47d9;
+    padding:6px;
+    border-radius:0 10px 10px 0;
+}
 
-            .overlay {
-                display: none !important;
-            }
+.submenu.show{
+    display:block;
+}
 
-            .hamburger {
-                display: none;
-            }
-        }
-    </style>
+.submenu button{
+    width:100%;
+    border:none;
+    background:transparent;
+    color:#17357a;
+    text-align:left;
+    border-radius:7px;
+    padding:9px 10px;
+    font-size:11.5px;
+    font-weight:700;
+    cursor:pointer;
+    margin-bottom:3px;
+}
+
+.submenu button:hover,
+.submenu button.active-item{
+    background:#eef3ff;
+    color:#0037ad;
+}
+
+/* CONTENT */
+
+.content{
+    height:100vh;
+    padding-top:80px;
+    overflow:auto;
+    background:#eef3f9;
+}
+
+.welcome{
+    min-height:calc(100vh - 80px);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:24px;
+}
+
+.welcome-logo{
+    width:90px;
+    height:90px;
+    object-fit:contain;
+    margin-bottom:18px;
+}
+
+.welcome h2{
+    font-size:24px;
+    color:#001d5c;
+    margin-bottom:10px;
+}
+
+.welcome h4{
+    max-width:760px;
+    font-size:14px;
+    font-weight:500;
+    line-height:1.6;
+    color:#475569;
+    margin-bottom:8px;
+}
+
+.welcome p{
+    max-width:660px;
+    font-size:12.5px;
+    color:#64748b;
+}
+
+/* IFRAME */
+
+iframe{
+    width:100%;
+    height:calc(100vh - 80px);
+    border:none;
+    background:white;
+    display:block;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    .topbar{
+        height:76px;
+        padding:0 10px;
+        gap:8px;
+    }
+
+    .menu-btn{
+        width:44px;
+        height:44px;
+        border-radius:13px;
+        font-size:22px;
+    }
+
+    .brand{
+        gap:8px;
+    }
+
+    .logo{
+        width:34px;
+        height:34px;
+    }
+
+    .school-name{
+        font-size:11px;
+        line-height:1.2;
+        white-space:normal;
+    }
+
+    .header-actions{
+        gap:6px;
+    }
+
+    .refresh-btn{
+        height:34px;
+        padding:0 9px;
+        font-size:10px;
+        border-radius:8px;
+    }
+
+    .time-box{
+        width:118px;
+        min-width:118px;
+        max-width:118px;
+        padding:6px;
+        border-radius:10px;
+    }
+
+    #liveTime{
+        font-size:12px;
+    }
+
+    #todayDate{
+        font-size:9px;
+    }
+
+    .top-menu{
+        top:76px;
+        width:100%;
+        height:calc(100vh - 76px);
+        padding:10px;
+    }
+
+    .content{
+        padding-top:76px;
+    }
+
+    .welcome{
+        min-height:calc(100vh - 76px);
+        padding:18px;
+    }
+
+    .welcome-logo{
+        width:76px;
+        height:76px;
+    }
+
+    .welcome h2{
+        font-size:20px;
+    }
+
+    .welcome h4{
+        font-size:13px;
+    }
+
+    iframe{
+        height:calc(100vh - 76px);
+    }
+}
+
+@media(max-width:420px){
+
+    .topbar{
+        height:74px;
+        padding:0 8px;
+    }
+
+    .menu-btn{
+        width:40px;
+        height:40px;
+    }
+
+    .logo{
+        width:30px;
+        height:30px;
+    }
+
+    .school-name{
+        font-size:10px;
+    }
+
+    .refresh-btn{
+        height:32px;
+        padding:0 7px;
+        font-size:9px;
+    }
+
+    .time-box{
+        width:104px;
+        min-width:104px;
+        max-width:104px;
+        padding:5px;
+    }
+
+    #liveTime{
+        font-size:11px;
+    }
+
+    #todayDate{
+        font-size:8px;
+    }
+
+    .top-menu{
+        top:74px;
+        height:calc(100vh - 74px);
+    }
+
+    .content{
+        padding-top:74px;
+    }
+
+    iframe{
+        height:calc(100vh - 74px);
+    }
+}
+</style>
 </head>
 
 <body>
 
-    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<header class="topbar">
 
-    <div class="wrapper">
+    <button class="menu-btn" onclick="toggleTopMenu()">
+        ☰
+    </button>
 
-        <!-- SIDEBAR-->
-        <div class="sidebar" id="sidebar">
-            <h2>Teacher's Hub</h2>
+    <div class="brand">
+        <img src="logo.png" class="logo">
 
-
-            <!-- SCHEDULES -->
-            <button onclick="toggle('sched')">Schedules</button>
-            <div class="submenu" id="sched">
-
-                <button
-                    onclick="loadFrame('schoolAgenda.html')">School Agenda</button>               
-                <button
-                    onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vTJ1lZ1EfOxqgk2lsBtwHCZKsx7mVRq0XXC3ZlhEhcY2nizXw6Lh7kyE59vMawlW7bZ59GBcfipdIS4/pubhtml?widget=true&headers=false')">view Timetables</button>
-                <button
-                    onclick="loadFrame('https://drive.google.com/file/d/1R3Ff11X5JOuHYc_EvxoQrunUdpVik0AQ/preview')">View Term Dates (2025–2027)</button>
-                <button
-                    onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vQq0Wyx2dYpP4JJJkq5haVsu7H6pomnf5pJeP9lkQBF2mqTPdrRcopH13tP1ppYm1xgUMCJhRA2vDe_/pubhtml?widget=true&headers=false')">View After School Timetable</button>     
-                <button
-                    onclick="loadFrame('https://docs.google.com/forms/d/e/1FAIpQLSdZNcH_otHtKWOLgtWkbamVDxUIfB1vrkYkVxATDZ8E1XfYcQ/viewform?embedded=true')">Record After School Request</button>
-                <button
-                    onclick="loadFrame('https://drive.google.com/file/d/1whLFd5cCybREfVi0IKG7cBnqzHSAyKEZ/preview')">View Lunch Menu</button>
-
-            </div>
-
-            <!-- CURRICULUM -->
-            <button onclick="toggle('curriculum')">Curriculum</button>
-            <div class="submenu" id="curriculum">             
-                <button
-                    onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vS47HEydfMNrO6XFbZsm4fHlgHolA6mSPqm0sSG6YjeaD9y9gMXXsAYAisYsonmvot4PV1qFP9einpS/pubhtml?widget=true&headers=false')">View Curriculum Feedback</button>
-                  <button
-                    onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vSvZ1FQmLICmRl1RIqX-c63nCdXM2OyB270cxtcaxS6K2_M2qpA2b7OZJbBnUImBCy-T3eb7FY2kImu/pubhtml?widget=true&headers=false')">View Lesson Plans S1</button>                 
-                 <button
-                    onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vQMFKnrJR7eYWD8L2I6rHOWz6Se-oJtK6e_0XY2ulrpcGJ8wxLrq6K8p-TIF7CAwrNbUWp0QwKv7CpX/pubhtml?widget=true&amp;headers=false')">View Lesson Plans S2</button>              
-                 <button
-                    onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vTyET2Qtnf-GO9oSI6vLkFcfLOq8WS3aLA1Iqb9e3Xc2SJDTOVjUePsIB-XMsqYAivp9_6jRwXDOuRV/pubhtml?widget=true&amp;headers=false')">View Lesson Plans Jr</button>  
-            </div>
-
-            <!-- STUDENTS -->
-            <button onclick="toggle('students')">Students & Classroom</button>
-            <div class="submenu" id="students">
-                <button
-                    onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vQeeJZZpj8WrnSwpxHHTybmz2OOxMFx7Cesd2rzDBfiPV8Y5V8K7VuKW-WyiSP3wCVcaMYCteQXqGlb/pubhtml?widget=true&headers=false')">View Disciplinary Board</button>
-                <button
-                    onclick="loadFrame('https://docs.google.com/forms/d/e/1FAIpQLSdW82xzyviqfkduy-Lpm7KFR1cSbtMnPLMFm38BndUJACSs4w/viewform?embedded=true')">Record Disciplinary Case</button>                
-                <button
-                    onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vRSEoIblyrRp9ip8OVoJv5CPwf_rD3MGKTGGk4W-5fVZyfTtl8zV3qOALyJoYEMW6mV0W-W6-Rw8B8z/pubhtml?widget=true&headers=false')">View Routines Register</button>
-                <button
-                    onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vQs6dBKKQkZlCddOURh5pB7Rwruxs4s1SJ0N6AFGyaGcI9A4qb-SU2G9LTtbFBbaJ3QcDP5MnHC1a2E/pubhtml?widget=true&amp;headers=false')">View Team Point</button>
-                <button
-                    onclick="loadFrame('team_points.html')">Record Team Point</button>
-                <button
-                    onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vT_rQVu_-SuUWg46u0J799YKBl-7ZvqkMAVOoawNrrpllo_KOt8D64yYGkMXatycB1-snNZ1NPysdUg/pubhtml?widget=true&headers=false')">View Test Scores</button>
-                <button 
-                    onclick="window.location.href='https://jangafrica-learning.github.io/TGA-Student-Folders/index.html'">Open Students' Folders</button>
-            </div>
-
-            <!-- LOGOUT & FOOTERS -->
-            <div class="sidebar-logout">
-                <button onclick="logout()">Logout ⏻</button>
-            </div>
-            <div class="sidebar-footer">
-                Powered by JangAfrika<br>
-                © <span id="year"></span> The Gambia Academy
-            </div>
-        </div>
-
-        <!-- MAIN -->
-        <div class="main">
-            <div class="top-bar">
-                <button class="hamburger" onclick="openMenu()">☰</button>
-            </div>
-
-            <div id="content">
-                <div class="center-welcome">
-                    <h2>Welcome to The Gambia Academy Teacher's Portal</h2>
-                    <h4>
-                        This portal supports planning & reporting, accountability,
-                        and operational excellence across The Academy.
-                    </h4>
-                    <p1>Use the sidebar menu to view schedules, curriculum, students & classroom.</p1>
-                </div>
-            </div>
+        <div>
+            <div class="school-name">THE GAMBIA ACADEMY</div>
         </div>
     </div>
 
-    <script>
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.getElementById("overlay");
+    <div class="header-actions">
 
-        function openMenu() {
-            sidebar.classList.add("active");
-            overlay.classList.add("active");
+        <button class="refresh-btn" onclick="refreshPortal()">
+            ↻ Refresh
+        </button>
+
+        <div class="time-box">
+            <div id="liveTime">00:00:00</div>
+            <div id="todayDate"></div>
+        </div>
+
+    </div>
+
+</header>
+
+<nav class="top-menu" id="topMenu">
+
+    <input
+    type="text"
+    id="menuSearch"
+    class="menu-search"
+    placeholder="Search submenu..."
+    onkeyup="filterMenu()">
+
+    <div class="menu-group">
+        <button class="menu-main" onclick="toggleSubmenu('sched', this)">
+            📅 Schedules
+        </button>
+
+        <div class="submenu" id="sched">
+            <button onclick="loadFrame('schoolAgenda.html', this)">School Agenda</button>
+            <button onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vTJ1lZ1EfOxqgk2lsBtwHCZKsx7mVRq0XXC3ZlhEhcY2nizXw6Lh7kyE59vMawlW7bZ59GBcfipdIS4/pubhtml?widget=true&headers=false', this)">View Timetables</button>
+            <button onclick="loadFrame('https://drive.google.com/file/d/1R3Ff11X5JOuHYc_EvxoQrunUdpVik0AQ/preview', this)">View Term Dates (2025–2027)</button>
+            <button onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vQq0Wyx2dYpP4JJJkq5haVsu7H6pomnf5pJeP9lkQBF2mqTPdrRcopH13tP1ppYm1xgUMCJhRA2vDe_/pubhtml?widget=true&headers=false', this)">View After School Timetable</button>
+            <button onclick="loadFrame('https://docs.google.com/forms/d/e/1FAIpQLSdZNcH_otHtKWOLgtWkbamVDxUIfB1vrkYkVxATDZ8E1XfYcQ/viewform?embedded=true', this)">Record After School Request</button>
+            <button onclick="loadFrame('https://drive.google.com/file/d/1whLFd5cCybREfVi0IKG7cBnqzHSAyKEZ/preview', this)">View Lunch Menu</button>
+        </div>
+    </div>
+
+    <div class="menu-group">
+        <button class="menu-main" onclick="toggleSubmenu('curriculum', this)">
+            📚 Curriculum
+        </button>
+
+        <div class="submenu" id="curriculum">
+            <button onclick="loadFrame('teacherSylabus.html', this)">My Syllabus</button>
+            <button onclick="loadFrame('lesson_report_portal.html', this)">Lessons & Feedbacks</button>
+        </div>
+    </div>
+
+    <div class="menu-group">
+        <button class="menu-main" onclick="toggleSubmenu('students', this)">
+            👥 Students & Classroom
+        </button>
+
+        <div class="submenu" id="students">
+            <button onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vQeeJZZpj8WrnSwpxHHTybmz2OOxMFx7Cesd2rzDBfiPV8Y5V8K7VuKW-WyiSP3wCVcaMYCteQXqGlb/pubhtml?widget=true&headers=false', this)">View Disciplinary Board</button>
+            <button onclick="loadFrame('https://docs.google.com/forms/d/e/1FAIpQLSdW82xzyviqfkduy-Lpm7KFR1cSbtMnPLMFm38BndUJACSs4w/viewform?embedded=true', this)">Record Disciplinary Case</button>
+            <button onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vRSEoIblyrRp9ip8OVoJv5CPwf_rD3MGKTGGk4W-5fVZyfTtl8zV3qOALyJoYEMW6mV0W-W6-Rw8B8z/pubhtml?widget=true&headers=false', this)">View Routines Register</button>
+            <button onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vQs6dBKKQkZlCddOURh5pB7Rwruxs4s1SJ0N6AFGyaGcI9A4qb-SU2G9LTtbFBbaJ3QcDP5MnHC1a2E/pubhtml?widget=true&amp;headers=false', this)">View Team Point</button>
+            <button onclick="loadFrame('team_points.html', this)">Record Team Point</button>
+            <button onclick="loadFrame('https://docs.google.com/spreadsheets/d/e/2PACX-1vT_rQVu_-SuUWg46u0J799YKBl-7ZvqkMAVOoawNrrpllo_KOt8D64yYGkMXatycB1-snNZ1NPysdUg/pubhtml?widget=true&headers=false', this)">View Test Scores</button>
+            <button onclick="window.location.href='https://jangafrica-learning.github.io/TGA-Student-Folders/index.html'">Open Students' Folders</button>
+        </div>
+    </div>
+
+    <div class="menu-group">
+        <button class="menu-main" onclick="logout()">🚪 Logout</button>
+    </div>
+
+</nav>
+
+<main class="content" id="content">
+
+    <div class="welcome">
+        <img src="logo.png" class="welcome-logo">
+
+        <h2>Welcome to The Gambia Academy Teacher's Portal</h2>
+
+        <h4>
+            This portal supports planning, reporting, accountability,
+            and operational excellence across The Academy.
+        </h4>
+
+        <p>
+            Use the menu to view schedules, curriculum, students and classroom records.
+        </p>
+    </div>
+
+</main>
+
+<script>
+function updateDateTime(){
+    const now = new Date();
+
+    document.getElementById("liveTime").innerHTML =
+    now.toLocaleTimeString("en-GB",{
+        hour:"2-digit",
+        minute:"2-digit",
+        second:"2-digit"
+    });
+
+    document.getElementById("todayDate").innerHTML =
+    now.toLocaleDateString("en-GB",{
+        weekday:"long",
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+    });
+}
+
+setInterval(updateDateTime,1000);
+updateDateTime();
+
+function toggleTopMenu(){
+    document.getElementById("topMenu").classList.toggle("show");
+}
+
+function closeSubmenus(){
+    document.querySelectorAll(".submenu").forEach(menu => {
+        menu.classList.remove("show");
+    });
+}
+
+function clearActive(){
+    document.querySelectorAll(".menu-main").forEach(btn => {
+        btn.classList.remove("active-section");
+    });
+
+    document.querySelectorAll(".submenu button").forEach(btn => {
+        btn.classList.remove("active-item");
+    });
+}
+
+function setActiveSection(button){
+    clearActive();
+
+    if(button){
+        button.classList.add("active-section");
+    }
+}
+
+function toggleSubmenu(id, button){
+    const menu = document.getElementById(id);
+    const open = menu.classList.contains("show");
+
+    closeSubmenus();
+    setActiveSection(button);
+
+    if(!open){
+        menu.classList.add("show");
+    }
+}
+
+function loadFrame(url, button){
+    if(button){
+        clearActive();
+
+        button.classList.add("active-item");
+
+        const parentMain =
+        button
+        .closest(".menu-group")
+        .querySelector(".menu-main");
+
+        if(parentMain){
+            parentMain.classList.add("active-section");
+        }
+    }
+
+    document.getElementById("topMenu").classList.remove("show");
+
+    document.getElementById("content").innerHTML = `
+        <iframe src="${url}"></iframe>
+    `;
+}
+
+function refreshPortal(){
+
+    const frame =
+    document.querySelector("#content iframe");
+
+    if(frame && frame.src){
+        frame.src = frame.src;
+        return;
+    }
+
+    location.reload();
+}
+
+function filterMenu(){
+
+    const search =
+    document.getElementById("menuSearch")
+    .value
+    .toLowerCase()
+    .trim();
+
+    const groups =
+    document.querySelectorAll(".menu-group");
+
+    groups.forEach(group => {
+
+        const submenu =
+        group.querySelector(".submenu");
+
+        if(!submenu){
+
+            const text =
+            group.innerText.toLowerCase();
+
+            group.style.display =
+            search === "" || text.includes(search)
+            ? "block"
+            : "none";
+
+            return;
         }
 
-        function closeMenu() {
-            sidebar.classList.remove("active");
-            overlay.classList.remove("active");
-        }
+        let foundMatch = false;
 
-        function toggle(id) {
-            const el = document.getElementById(id);
-            el.style.display = el.style.display === 'block' ? 'none' : 'block';
-        }
+        submenu
+        .querySelectorAll("button")
+        .forEach(item => {
 
-        function loadFrame(url) {
-            closeMenu();
-            document.getElementById('content').innerHTML = `
-                <div class="top-bar">
-                    <strong>The Gambia Academy SMS</strong>
-                    <button class="back-btn" onclick="goBack()">CLOSE</button>
-                </div>
-                <iframe src="${url}"></iframe>
-            `;
-        }
+            const text =
+            item.innerText.toLowerCase();
 
-        function goBack() {
-            document.getElementById('content').innerHTML = `
-                <div class="center-welcome">
-                    <h2>Welcome Back</h2>
-                    <p>Select an item from the sidebar menus to continue navigating the system.</p>
-                </div>
-            `;
-        }
+            if(search === "" || text.includes(search)){
+                item.style.display = "block";
+                foundMatch = true;
+            }else{
+                item.style.display = "none";
+            }
+        });
 
-        document.getElementById("year").textContent = new Date().getFullYear();
-        function logout() {
-            // Optional: clear session storage later if you add login sessions
-            // sessionStorage.clear();
+        if(search === ""){
+            group.style.display = "block";
+            submenu.classList.remove("show");
+        }else{
+            group.style.display = foundMatch ? "block" : "none";
 
-            window.location.href = "index.html"; // your homepage
+            if(foundMatch){
+                submenu.classList.add("show");
+            }
         }
-    </script>
+    });
+}
+
+function logout(){
+    window.location.href = "index.html";
+}
+
+document.addEventListener("click", function(event){
+    const topMenu = document.getElementById("topMenu");
+    const menuBtn = document.querySelector(".menu-btn");
+
+    if(!topMenu.contains(event.target) && !menuBtn.contains(event.target)){
+        closeSubmenus();
+    }
+});
+</script>
 
 </body>
-
-
 </html>
-
-
-
-
-
-
-
-
-
