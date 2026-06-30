@@ -215,6 +215,23 @@
       color: #17357a;
     }
 
+    .required-mark {
+      color: var(--error);
+      margin-left: 3px;
+      font-weight: 800;
+    }
+
+    .required-note {
+      color: var(--error);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .field-invalid {
+      border-color: var(--error) !important;
+      background: #fff7f8 !important;
+    }
+
     .primary,
     .secondary,
     .choice-btn {
@@ -524,6 +541,57 @@
       border: 1px solid var(--border);
     }
 
+    .review-status {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .review-status-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #17357a;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-pending {
+      background: #fff7e6;
+      color: #9a6700;
+    }
+
+    .status-approved {
+      background: #ecfdf3;
+      color: #0b6b2f;
+    }
+
+    .status-returned {
+      background: #fff1f2;
+      color: #b00020;
+    }
+
+    .admin-comment {
+      margin: 0;
+      color: #334155;
+      font-size: 12px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
     .file-link {
       display: inline-block;
       margin-top: 9px;
@@ -596,6 +664,7 @@
     <button class="active" onclick="showSection('overview', this)">Report Summary</button>
     <button onclick="showSection('upload', this)">Upload Lesson/Assignment</button>
     <button onclick="showSection('view', this)">Lesson Reports</button>
+    <button onclick="showSection('assignments', this)">Assignments</button>
   </div>
 
   <main class="main">
@@ -669,10 +738,11 @@
       <div id="lessonFormCard" class="card form-card">
         <h3>Upload Lesson Report</h3>
 
-        <form id="lessonForm">
+        <form id="lessonForm" novalidate>
+          <div class="muted required-note"><span class="required-mark">*</span> All fields in this lesson-report form are required.</div>
           <div class="form-grid">
             <div>
-              <label>School Level</label>
+              <label>School Level<span class="required-mark" aria-hidden="true">*</span></label>
               <select id="lessonLevel" required onchange="updateSubjectOptions('lessonLevel','lessonSubject',false)">
                 <option value="">Select level</option>
                 <option value="JUNIOR">Junior</option>
@@ -682,46 +752,46 @@
             </div>
 
             <div>
-              <label>Subject Sheet</label>
+              <label>Subject Sheet<span class="required-mark" aria-hidden="true">*</span></label>
               <select id="lessonSubject" required>
                 <option value="">Select subject</option>
               </select>
             </div>
 
             <div>
-              <label>Date</label>
+              <label>Date<span class="required-mark" aria-hidden="true">*</span></label>
               <input type="date" id="lessonDate" required>
             </div>
 
             <div>
-              <label>Class/Group</label>
+              <label>Class/Group<span class="required-mark" aria-hidden="true">*</span></label>
               <input type="text" id="lessonClassGroup" required>
             </div>
 
             <div>
-              <label>Subject/Course</label>
+              <label>Subject/Course<span class="required-mark" aria-hidden="true">*</span></label>
               <input type="text" id="lessonSubjectCourse" required>
             </div>
 
             <div>
-              <label>Teacher</label>
+              <label>Teacher<span class="required-mark" aria-hidden="true">*</span></label>
               <input type="text" id="lessonTeacher" required>
             </div>
 
             <div class="full-width">
-              <label>Topic/Content</label>
+              <label>Topic/Content<span class="required-mark" aria-hidden="true">*</span></label>
               <textarea id="lessonTopicContent" required></textarea>
             </div>
 
             <div class="full-width">
-              <label>Objective(s)</label>
+              <label>Objective(s)<span class="required-mark" aria-hidden="true">*</span></label>
               <textarea id="lessonObjectives" required></textarea>
             </div>
 
             <div class="full-width">
-              <label>Lesson File</label>
-              <input type="file" id="lessonFile" accept=".doc,.docx,.pdf,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.mkv,.mp3,.wav,.m4a,image/*,video/*,audio/*">
-              <div class="muted">Recommended maximum file size: 10MB.</div>
+              <label>Lesson File<span class="required-mark" aria-hidden="true">*</span></label>
+              <input type="file" id="lessonFile" required accept=".doc,.docx,.pdf,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.mkv,.mp3,.wav,.m4a,image/*,video/*,audio/*">
+              <div class="muted">Maximum file size: 10MB. A file is required.</div>
             </div>
           </div>
 
@@ -737,10 +807,11 @@
       <div id="assignmentFormCard" class="card form-card">
         <h3>Upload Assignment</h3>
 
-        <form id="assignmentForm">
+        <form id="assignmentForm" novalidate>
+          <div class="muted required-note"><span class="required-mark">*</span> All fields in this assignment form are required.</div>
           <div class="form-grid">
             <div>
-              <label>School Level</label>
+              <label>School Level<span class="required-mark" aria-hidden="true">*</span></label>
               <select id="assignmentLevel" required onchange="updateSubjectOptions('assignmentLevel','assignmentSubject',false)">
                 <option value="">Select level</option>
                 <option value="JUNIOR">Junior</option>
@@ -750,50 +821,50 @@
             </div>
 
             <div>
-              <label>Subject</label>
+              <label>Subject<span class="required-mark" aria-hidden="true">*</span></label>
               <select id="assignmentSubject" required>
                 <option value="">Select subject</option>
               </select>
             </div>
 
             <div>
-              <label>Date</label>
+              <label>Date<span class="required-mark" aria-hidden="true">*</span></label>
               <input type="date" id="assignmentDate" required>
             </div>
 
             <div>
-              <label>Class</label>
+              <label>Class<span class="required-mark" aria-hidden="true">*</span></label>
               <input type="text" id="assignmentClass" required>
             </div>
 
             <div>
-              <label>Submission Date</label>
+              <label>Submission Date<span class="required-mark" aria-hidden="true">*</span></label>
               <input type="date" id="assignmentSubmissionDate" required>
             </div>
 
             <div>
-              <label>Assigned Marks</label>
-              <input type="number" id="assignmentMarks" required>
+              <label>Assigned Marks<span class="required-mark" aria-hidden="true">*</span></label>
+              <input type="number" id="assignmentMarks" required min="1" step="1">
             </div>
 
             <div>
-              <label>Teacher</label>
+              <label>Teacher<span class="required-mark" aria-hidden="true">*</span></label>
               <input type="text" id="assignmentTeacher" required>
             </div>
 
             <div class="full-width">
-              <label>Content/Question</label>
+              <label>Content/Question<span class="required-mark" aria-hidden="true">*</span></label>
               <textarea id="assignmentContentQuestion" required></textarea>
             </div>
 
             <div class="full-width">
-              <label>Activities</label>
+              <label>Activities<span class="required-mark" aria-hidden="true">*</span></label>
               <textarea id="assignmentActivities" required></textarea>
             </div>
 
             <div class="full-width">
-              <label>Assignment File</label>
-              <input type="file" id="assignmentFile" accept=".doc,.docx,.pdf,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.mkv,.mp3,.wav,.m4a,image/*,video/*,audio/*">
+              <label>Assignment File<span class="required-mark" aria-hidden="true">*</span></label>
+              <input type="file" id="assignmentFile" required accept=".doc,.docx,.pdf,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.mkv,.mp3,.wav,.m4a,image/*,video/*,audio/*">
             </div>
           </div>
 
@@ -810,8 +881,8 @@
     <section id="view" class="section">
       <div class="view-hero">
         <div>
-          <h1>View Lesson Reports</h1>
-          <p>Browse and search uploaded lesson reports.</p>
+          <h1>Lesson Reports & Review Status</h1>
+          <p>Search by your name to view lesson reports, approval status, and administrator feedback.</p>
         </div>
       </div>
 
@@ -836,7 +907,7 @@
 
           <div>
             <label>Search</label>
-            <input type="text" id="searchText" placeholder="Search topic, teacher, class...">
+            <input type="text" id="searchText" placeholder="Search your name, topic, or class...">
           </div>
 
           <div class="button-row">
@@ -852,10 +923,55 @@
       <div id="reportsContent" class="reports-grid"></div>
     </section>
 
+    <section id="assignments" class="section">
+      <div class="view-hero">
+        <div>
+          <h1>Assignments</h1>
+          <p>Search submitted assignments by school level, subject, teacher, class, or assignment content.</p>
+        </div>
+      </div>
+
+      <div class="report-search-panel">
+        <div class="filters">
+          <div>
+            <label>School Level</label>
+            <select id="assignmentViewLevel" onchange="updateSubjectOptions('assignmentViewLevel','assignmentViewSubject',true)">
+              <option value="">Select level</option>
+              <option value="JUNIOR">Junior</option>
+              <option value="SENIOR1">Senior 1</option>
+              <option value="SENIOR2">Senior 2</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Subject</label>
+            <select id="assignmentViewSubject">
+              <option value="ALL">All subjects</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Search</label>
+            <input type="text" id="assignmentSearchText" placeholder="Search your name, class, question, or activity...">
+          </div>
+
+          <div class="button-row">
+            <button class="primary" onclick="loadAssignments()">Search</button>
+            <button class="secondary" onclick="clearAssignmentsSearch()">Clear</button>
+          </div>
+        </div>
+
+        <div id="assignmentsMessage" class="message">Select a school level and click Search.</div>
+      </div>
+
+      <div id="assignmentsStats" class="report-stats"></div>
+      <div id="assignmentsContent" class="reports-grid"></div>
+    </section>
+
   </main>
 
   <script>
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzw20Eejvw1Ye9U_JU6fQ0sZF_CBK9oVIxKh6GtDxgUZEAeDitU0BVQt9sui0tKA_wRGQ/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzCG252oko_7dDWKdqahjzNzd9kWcDxKK3wHmrwR613Q0Wf-icWjp62wXySd0_L-fmgpw/exec';
 
     const LEVELS = {
       JUNIOR: {
@@ -888,6 +1004,15 @@
 
       if (sectionId === 'overview') {
         loadOverview();
+      }
+
+      if (sectionId === 'assignments') {
+        const assignmentMessage = document.getElementById('assignmentsMessage');
+
+        if (!document.getElementById('assignmentViewLevel').value) {
+          assignmentMessage.textContent = 'Select a school level and click Search.';
+          assignmentMessage.className = 'message';
+        }
       }
     }
 
@@ -932,6 +1057,10 @@
       const btn = document.getElementById('lessonSubmitBtn');
       const msg = document.getElementById('lessonMessage');
 
+      if (!validateRequiredUploadForm('lessonForm', 'lessonMessage')) {
+        return;
+      }
+
       msg.textContent = '';
       btn.disabled = true;
       btn.textContent = 'Submitting...';
@@ -970,6 +1099,10 @@
       const btn = document.getElementById('assignmentSubmitBtn');
       const msg = document.getElementById('assignmentMessage');
 
+      if (!validateRequiredUploadForm('assignmentForm', 'assignmentMessage')) {
+        return;
+      }
+
       msg.textContent = '';
       btn.disabled = true;
       btn.textContent = 'Submitting...';
@@ -1001,6 +1134,69 @@
 
       btn.disabled = false;
       btn.textContent = 'Submit Assignment';
+    });
+
+    function validateRequiredUploadForm(formId, messageId) {
+      const form = document.getElementById(formId);
+      const message = document.getElementById(messageId);
+      const requiredFields = form.querySelectorAll('[required]');
+      const missingLabels = [];
+      let firstInvalidField = null;
+
+      requiredFields.forEach(field => {
+        const isFile = field.type === 'file';
+        const isNumber = field.type === 'number';
+        const rawValue = isFile ? '' : String(field.value || '').trim();
+
+        let valid = isFile
+          ? Boolean(field.files && field.files.length)
+          : rawValue !== '';
+
+        if (valid && isNumber) {
+          const numberValue = Number(rawValue);
+          valid = Number.isFinite(numberValue) && numberValue >= 1;
+        }
+
+        if (!valid) {
+          field.classList.add('field-invalid');
+          field.setAttribute('aria-invalid', 'true');
+
+          const nearestContainer = field.closest('div');
+          const label = nearestContainer ? nearestContainer.querySelector('label') : null;
+          const labelText = label
+            ? label.textContent.replace('*', '').trim()
+            : 'Required field';
+
+          missingLabels.push(labelText);
+
+          if (!firstInvalidField) {
+            firstInvalidField = field;
+          }
+        } else {
+          field.classList.remove('field-invalid');
+          field.removeAttribute('aria-invalid');
+        }
+      });
+
+      if (firstInvalidField) {
+        message.textContent = 'Complete all required fields before submitting: ' + missingLabels.join(', ') + '.';
+        message.className = 'message error';
+        firstInvalidField.focus();
+        return false;
+      }
+
+      return true;
+    }
+
+    function clearFieldValidationState(event) {
+      const field = event.target;
+      field.classList.remove('field-invalid');
+      field.removeAttribute('aria-invalid');
+    }
+
+    document.querySelectorAll('#lessonForm [required], #assignmentForm [required]').forEach(field => {
+      field.addEventListener('input', clearFieldValidationState);
+      field.addEventListener('change', clearFieldValidationState);
     });
 
     async function postPayload(payload) {
@@ -1035,6 +1231,7 @@
         let totalWeek = 0;
         let totalMonth = 0;
         let totalAssignments = 0;
+        let totalRejected = 0;
 
         result.overview.forEach(item => {
           totalLessons += Number(item.totalLessons || 0);
@@ -1042,9 +1239,10 @@
           totalWeek += Number(item.weekly || 0);
           totalMonth += Number(item.monthly || 0);
           totalAssignments += Number(item.totalAssignments || 0);
+          totalRejected += Number(item.rejected || 0);
         });
 
-        renderKpis({ totalLessons, totalToday, totalWeek, totalMonth, totalAssignments });
+        renderKpis({ totalLessons, totalToday, totalWeek, totalMonth, totalAssignments, totalRejected });
         renderClassPerformance(result.overview, totalLessons);
         renderClassDistributionChart(result.overview);
         result.overview.forEach(item => addInteractivePieChart(item));
@@ -1064,6 +1262,7 @@
         <div class="kpi-card"><div class="kpi-label">This Week</div><div class="kpi-number">${data.totalWeek}</div></div>
         <div class="kpi-card"><div class="kpi-label">This Month</div><div class="kpi-number">${data.totalMonth}</div></div>
         <div class="kpi-card"><div class="kpi-label">Assignments</div><div class="kpi-number">${data.totalAssignments}</div></div>
+        <div class="kpi-card"><div class="kpi-label">Returned for Revision</div><div class="kpi-number">${data.totalRejected}</div></div>
       `;
     }
 
@@ -1213,6 +1412,8 @@
             ? `<a class="file-link" href="${escapeAttribute(report.fileUrl)}" target="_blank">Open File</a>`
             : `<span class="muted">No file uploaded</span>`;
 
+          const review = formatReviewStatus(report.status, report.adminComment);
+
           card.innerHTML = `
             <div class="report-badges">
               <span class="report-badge">${escapeHtml(report.level)}</span>
@@ -1225,6 +1426,13 @@
             <div class="report-detail"><strong>Course:</strong> ${escapeHtml(report.subjectCourse)}</div>
             <div class="report-detail"><strong>Teacher:</strong> ${escapeHtml(report.teacher)}</div>
             <div class="report-objective"><strong>Objective(s):</strong><br>${escapeHtml(report.objectives)}</div>
+            <div class="review-status">
+              <div class="review-status-head">
+                <span>Review Status</span>
+                <span class="status-pill ${review.className}">${escapeHtml(review.label)}</span>
+              </div>
+              <p class="admin-comment"><strong>Administrator Comment:</strong><br>${escapeHtml(review.comment)}</p>
+            </div>
             ${fileLink}
           `;
 
@@ -1235,6 +1443,157 @@
         message.textContent = error.message || error;
         message.className = 'message error';
       }
+    }
+
+    function formatReviewStatus(status, adminComment) {
+      const normalised = String(status || '').trim().toLowerCase();
+      const comment = String(adminComment || '').trim();
+
+      if (normalised === 'approved') {
+        return {
+          label: 'Approved',
+          className: 'status-approved',
+          comment: comment || 'Approved by the Head of Curriculum. No additional comment was provided.'
+        };
+      }
+
+      if (normalised === 'rejected' || normalised === 'returned' || normalised === 'returned for revision') {
+        return {
+          label: 'Returned for Revision',
+          className: 'status-returned',
+          comment: comment || 'This lesson report was returned for revision. Please contact the Head of Curriculum for the required changes.'
+        };
+      }
+
+      return {
+        label: 'Pending Review',
+        className: 'status-pending',
+        comment: comment || 'This lesson report is awaiting Head of Curriculum review.'
+      };
+    }
+
+    async function loadAssignments() {
+      const level = document.getElementById('assignmentViewLevel').value;
+      const subject = document.getElementById('assignmentViewSubject').value || 'ALL';
+      const search = document.getElementById('assignmentSearchText').value.trim();
+
+      const container = document.getElementById('assignmentsContent');
+      const stats = document.getElementById('assignmentsStats');
+      const message = document.getElementById('assignmentsMessage');
+
+      container.innerHTML = '';
+      stats.innerHTML = '';
+
+      if (!level) {
+        message.textContent = 'Please select a school level.';
+        message.className = 'message error';
+        return;
+      }
+
+      message.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading assignments...';
+      message.className = 'message';
+
+      try {
+        const url =
+          WEB_APP_URL +
+          '?action=assignments' +
+          '&level=' + encodeURIComponent(level) +
+          '&subject=' + encodeURIComponent(subject) +
+          '&search=' + encodeURIComponent(search);
+
+        const result = await jsonp(url);
+
+        if (!result.success) {
+          throw new Error(result.message || 'Assignments could not be loaded.');
+        }
+
+        const assignments = Array.isArray(result.assignments)
+          ? result.assignments
+          : [];
+
+        message.textContent = '';
+
+        const teacherSet = new Set(
+          assignments.map(item => item.teacher).filter(Boolean)
+        );
+
+        const subjectSet = new Set(
+          assignments.map(item => item.subject).filter(Boolean)
+        );
+
+        const classSet = new Set(
+          assignments
+            .map(item => item.className || item.classGroup)
+            .filter(Boolean)
+        );
+
+        stats.innerHTML = `
+          <div class="report-stat-card"><span>Total Assignments</span><strong>${assignments.length}</strong></div>
+          <div class="report-stat-card"><span>Teachers</span><strong>${teacherSet.size}</strong></div>
+          <div class="report-stat-card"><span>Classes</span><strong>${classSet.size}</strong></div>
+          <div class="report-stat-card"><span>Subjects</span><strong>${subjectSet.size}</strong></div>
+        `;
+
+        if (!assignments.length) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <h3>No assignments found</h3>
+              <p>Try changing the selected level, subject, or search text.</p>
+            </div>
+          `;
+          return;
+        }
+
+        assignments.forEach(assignment => {
+          const card = document.createElement('div');
+          card.className = 'report-card-web';
+
+          const fileLink = assignment.fileUrl
+            ? `<a class="file-link" href="${escapeAttribute(assignment.fileUrl)}" target="_blank" rel="noopener">Open Assignment File</a>`
+            : `<span class="muted">No file uploaded</span>`;
+
+          const assignmentClass = assignment.className || assignment.classGroup || '';
+          const submissionDate = assignment.submissionDate || 'Not specified';
+          const assignedMarks = assignment.assignedMarks === 0 || assignment.assignedMarks
+            ? assignment.assignedMarks
+            : 'Not specified';
+
+          card.innerHTML = `
+            <div class="report-badges">
+              <span class="report-badge">${escapeHtml(assignment.level || '')}</span>
+              <span class="report-badge">${escapeHtml(assignment.subject || '')}</span>
+              <span class="report-badge">${escapeHtml(assignment.date || '')}</span>
+            </div>
+
+            <h3>${escapeHtml(assignment.contentQuestion || 'Assignment')}</h3>
+            <div class="report-detail"><strong>Class:</strong> ${escapeHtml(assignmentClass)}</div>
+            <div class="report-detail"><strong>Teacher:</strong> ${escapeHtml(assignment.teacher || '')}</div>
+            <div class="report-detail"><strong>Submission Date:</strong> ${escapeHtml(submissionDate)}</div>
+            <div class="report-detail"><strong>Assigned Marks:</strong> ${escapeHtml(assignedMarks)}</div>
+            <div class="report-objective"><strong>Activities:</strong><br>${escapeHtml(assignment.activities || 'No activities provided.')}</div>
+            ${fileLink}
+          `;
+
+          container.appendChild(card);
+        });
+
+      } catch (error) {
+        message.textContent = error.message || String(error);
+        message.className = 'message error';
+      }
+    }
+
+    function clearAssignmentsSearch() {
+      document.getElementById('assignmentViewLevel').value = '';
+      document.getElementById('assignmentViewSubject').innerHTML =
+        '<option value="ALL">All subjects</option>';
+      document.getElementById('assignmentSearchText').value = '';
+      document.getElementById('assignmentsStats').innerHTML = '';
+      document.getElementById('assignmentsContent').innerHTML = '';
+
+      const message = document.getElementById('assignmentsMessage');
+      message.textContent = 'Select a school level and click Search.';
+      message.className = 'message';
     }
 
     function clearReportSearch() {
