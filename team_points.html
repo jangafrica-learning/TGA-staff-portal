@@ -1,377 +1,1567 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Point Entry</title>
+    <title>Team Points</title>
 
     <style>
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-            margin: 0;
+        :root {
+            --blue: #0037ad;
+            --dark-blue: #001d5c;
+            --light-blue: #eef3f9;
+            --border: #dfe5ef;
+            --text: #1d2b53;
+            --muted: #667085;
+            --danger: #c62828;
+            --success: #1b7a30;
         }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 11pt;
+            color: var(--text);
+            background: var(--light-blue);
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font-family: Arial, sans-serif;
+            font-size: 11pt;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* MAIN NAVIGATION */
+
+        .nav-container {
+            max-width: 1100px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-container button {
+            flex: 1;
+            min-width: 150px;
+            padding: 11px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            background: var(--blue);
+            font-weight: bold;
+        }
+
+        .nav-container button.active {
+            background: var(--dark-blue);
+        }
+
+        /* MAIN CARD */
 
         .form-container {
-            max-width: 500px;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
+            max-width: 1100px;
             margin: auto;
-
-            box-shadow:
-            0 0 10px rgba(0,0,0,0.1);
+            padding: 22px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
         }
 
-        /* LOGO */
-
-        .logo {
-            max-width: 70px;
-            height: auto;
-
-            display: block;
-            margin: 0 auto 10px auto;
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
         }
-
-        /* TITLE */
 
         h2 {
-            text-align: center;
-            margin-bottom: 25px;
+            margin: 0;
+            color: var(--dark-blue);
+            font-size: 11pt;
         }
 
-        /* FIELDS */
+        .section-header button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            background: var(--blue);
+            font-weight: bold;
+        }
+
+        /* FORM FIELDS */
 
         .field {
-            margin-bottom: 18px;
+            max-width: 500px;
+            margin-bottom: 16px;
         }
 
         label {
             display: block;
             margin-bottom: 6px;
-
             font-weight: bold;
         }
 
         input,
-        select {
+        select,
+        textarea {
             width: 100%;
             padding: 10px;
-
-            border: 1px solid #ccc;
+            border: 1px solid #cfd7e6;
             border-radius: 5px;
-
-            box-sizing: border-box;
-
-            font-size: 14px;
+            color: var(--text);
             background: white;
         }
 
-        .team-field {
-            background: #efefef;
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--blue);
         }
 
-        /* ERROR */
+        .team-field {
+            background: #f4f7fc;
+        }
 
         .error {
-            border: 2px solid red !important;
-            background: #ffe6e6 !important;
+            border: 2px solid var(--danger) !important;
+            background: #fff0f0 !important;
         }
 
         .error-text {
-            color: red;
-            font-size: 12px;
             margin-top: 4px;
+            color: var(--danger);
+            font-size: 11pt;
         }
 
         /* BUTTONS */
 
         .buttons {
-            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+            max-width: 500px;
+            margin-top: 22px;
+        }
 
+        .buttons button {
+            flex: 1;
+            min-width: 0;
+            padding: 11px 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+
+        .save-btn,
+        .refresh-btn,
+        .edit-btn {
+            background: var(--blue);
+        }
+
+        .clear-btn,
+        .delete-btn {
+            background: var(--danger);
+        }
+
+        .close-btn {
+            background: var(--muted);
+        }
+
+        /* SUMMARY */
+
+        .summary-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 18px;
+            padding: 13px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            background: #f8faff;
+        }
+
+        .summary-box div {
+            font-size: 11pt;
+        }
+
+        .summary-box strong {
+            color: var(--dark-blue);
+            font-size: 11pt;
+        }
+
+        /* TABLES */
+
+        .table-wrapper {
+            margin-top: 18px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 790px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 9px;
+            border: 1px solid var(--border);
+            text-align: left;
+            vertical-align: top;
+            font-size: 11pt;
+        }
+
+        th {
+            color: white;
+            white-space: nowrap;
+            background: var(--blue);
+        }
+
+        tr:nth-child(even) {
+            background: #f8faff;
+        }
+
+        .positive-points {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .negative-points {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .table-actions button {
+            padding: 7px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            font-size: 11pt;
+            font-weight: bold;
+        }
+
+        .empty-message {
+            margin-top: 18px;
+            padding: 22px;
+            border: 1px dashed #aebbd4;
+            border-radius: 5px;
+            color: var(--muted);
+            text-align: center;
+            font-size: 11pt;
+        }
+
+        .period-label {
+            margin: 0 0 14px 0;
+            color: var(--muted);
+            text-align: center;
+            font-size: 11pt;
+            font-weight: bold;
+        }
+
+        /* POINT ENTRY MODAL */
+
+        .modal-overlay,
+        .delete-modal-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(0, 29, 92, 0.42);
+        }
+
+        .modal-overlay {
+            z-index: 1000;
+        }
+
+        .delete-modal-overlay {
+            z-index: 1200;
+        }
+
+        .modal-overlay.show,
+        .delete-modal-overlay.show {
+            display: flex;
+        }
+
+        .modal,
+        .delete-modal {
+            width: 100%;
+            padding: 22px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 0 18px rgba(0, 0, 0, 0.18);
+        }
+
+        .modal {
+            max-width: 500px;
+            max-height: 92vh;
+            overflow-y: auto;
+        }
+
+        .delete-modal {
+            max-width: 440px;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        /* CUSTOM DELETE MODAL */
+
+        .delete-modal h2 {
+            margin-bottom: 12px;
+        }
+
+        .delete-modal p {
+            margin: 0 0 18px 0;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .delete-record-details {
+            margin-bottom: 20px;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            background: #f8faff;
+        }
+
+        .delete-record-details div {
+            margin-bottom: 8px;
+            font-size: 11pt;
+        }
+
+        .delete-record-details div:last-child {
+            margin-bottom: 0;
+        }
+
+        .delete-record-details strong {
+            color: var(--dark-blue);
+        }
+
+        .delete-modal-buttons {
             display: flex;
             gap: 10px;
         }
 
-        button {
+        .delete-modal-buttons button {
             flex: 1;
+            padding: 11px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11pt;
+            font-weight: bold;
+        }
 
+        .cancel-delete-btn {
+            color: var(--blue);
+            background: white;
+            border: 1px solid var(--blue);
+        }
+
+        .confirm-delete-btn {
+            color: white;
+            background: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+    @media screen and (max-width: 768px) {
+
+        html,
+        body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            padding: 10px;
+            font-size: 11pt;
+        }
+
+        .nav-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .nav-container button {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .form-container {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+        }
+
+        .section-header button {
+            width: 100%;
+        }
+
+        .field,
+        .buttons {
+            max-width: none;
+            width: 100%;
+        }
+
+        .buttons {
+            gap: 6px;
+        }
+
+        .buttons button {
+            padding: 10px 5px;
+        }
+
+        .summary-box {
+            display: block;
             padding: 12px;
+        }
 
+        .summary-box div {
+            margin-bottom: 9px;
+        }
+
+        .summary-box div:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-overlay,
+        .delete-modal-overlay {
+            padding: 10px;
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+
+        .modal,
+        .delete-modal {
+            width: 100%;
+            max-height: 94vh;
+            margin: 10px 0;
+            padding: 16px;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+
+        .delete-modal-buttons {
+            flex-direction: column;
+        }
+
+        .delete-modal-buttons button {
+            width: 100%;
+        }
+
+        /*
+        * Removes horizontal scrolling from all Team Point tables.
+        * Each record becomes a vertical card on small devices.
+        */
+
+        .table-wrapper {
+            overflow: visible;
+            width: 100%;
+        }
+
+        table,
+        thead,
+        tbody,
+        tr,
+        th,
+        td {
+            display: block;
+            width: 100%;
+        }
+
+        table {
+            min-width: 0;
+            border: none;
+            background: transparent;
+        }
+
+        thead {
+            display: none;
+        }
+
+        tbody {
+            display: grid;
+            gap: 12px;
+        }
+
+        tr {
+            padding: 0;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        tr:nth-child(even) {
+            background: white;
+        }
+
+        td {
+            display: grid;
+            grid-template-columns: 95px minmax(0, 1fr);
+            gap: 8px;
+            padding: 10px;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            font-size: 11pt;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        td:last-child {
+            border-bottom: none;
+        }
+
+        td::before {
+            color: var(--dark-blue);
+            font-weight: bold;
+            content: "";
+        }
+
+        /*
+        * VIEW TEAM POINTS TABLE
+        */
+
+        #viewTableBody td:nth-child(1)::before {
+            content: "Date";
+        }
+
+        #viewTableBody td:nth-child(2)::before {
+            content: "Team";
+        }
+
+        #viewTableBody td:nth-child(3)::before {
+            content: "Name";
+        }
+
+        #viewTableBody td:nth-child(4)::before {
+            content: "Reason";
+        }
+
+        #viewTableBody td:nth-child(5)::before {
+            content: "Points";
+        }
+
+        #viewTableBody td:nth-child(6)::before {
+            content: "By";
+        }
+
+        /*
+        * MANAGE TEAM POINTS TABLE
+        */
+
+        #manageTableBody td:nth-child(1)::before {
+            content: "Date";
+        }
+
+        #manageTableBody td:nth-child(2)::before {
+            content: "Team";
+        }
+
+        #manageTableBody td:nth-child(3)::before {
+            content: "Name";
+        }
+
+        #manageTableBody td:nth-child(4)::before {
+            content: "Reason";
+        }
+
+        #manageTableBody td:nth-child(5)::before {
+            content: "Points";
+        }
+
+        #manageTableBody td:nth-child(6)::before {
+            content: "By";
+        }
+
+        #manageTableBody td:nth-child(7)::before {
+            content: "Action";
+        }
+
+        /*
+        * TOP POINT EARNER TABLE
+        */
+
+        #topTableBody td:nth-child(1)::before {
+            content: "Rank";
+        }
+
+        #topTableBody td:nth-child(2)::before {
+            content: "Name";
+        }
+
+        #topTableBody td:nth-child(3)::before {
+            content: "Team";
+        }
+
+        #topTableBody td:nth-child(4)::before {
+            content: "Net Points";
+        }
+
+        .table-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+        }
+
+        .table-actions button {
+            width: 100%;
+            padding: 9px 5px;
+        }
+
+        .empty-message {
+            padding: 16px 10px;
+            font-size: 11pt;
+        }
+    }
+
+    
+        /* TEAMS + RULES TABS */
+
+        textarea { resize: vertical; line-height: 1.4; }
+
+        .hint {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 10pt;
+            font-weight: normal;
+        }
+
+        .sub-title {
+            margin: 30px 0 0 0;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .status {
+            max-width: 500px;
+            margin-top: 14px;
+            padding: 11px 13px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .status.success { color: var(--success); background: #edf8ef; border: 1px solid #b7e0be; }
+        .status.error { color: var(--danger); background: #fff0f0; border: 1px solid #f1b9b9; }
+
+        .buttons button:disabled { opacity: 0.6; cursor: wait; }
+
+        .members-cell { max-width: 420px; line-height: 1.5; }
+
+        /* MULTI-ROW ENTRY (STUDENTS + RULES) */
+
+        .entry-grid { max-width: 760px; }
+
+        .entry-head,
+        .entry-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 40px;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .rules-grid .entry-head,
+        .rules-grid .entry-row { grid-template-columns: 2fr 1fr 40px; }
+
+        .entry-head {
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: var(--dark-blue);
+        }
+
+        .entry-row { margin-bottom: 8px; }
+
+        .row-remove {
+            height: 38px;
             border: none;
             border-radius: 5px;
-
             cursor: pointer;
-
-            font-size: 15px;
-            font-weight: bold;
-
             color: white;
-        }
-
-        .save-btn {
-            background: #4CAF50;
-        }
-
-        .clear-btn {
-            background: #f44336;
-        }
-
-        /* SUCCESS */
-
-        .success {
-            margin-top: 20px;
-
-            text-align: center;
+            background: var(--muted);
             font-weight: bold;
+            font-size: 14pt;
+            line-height: 1;
         }
 
-        /* MOBILE */
+        .row-remove:hover { background: var(--danger); }
+
+        .entry-buttons { max-width: 760px; flex-wrap: wrap; }
+        .entry-buttons button { flex: 1 1 140px; }
 
         @media screen and (max-width: 768px) {
-
-            .form-container {
-                padding: 20px;
-            }
-
-            button {
-                font-size: 14px;
-            }
+            .entry-head,
+            .entry-row { grid-template-columns: 1fr 1fr 34px; gap: 6px; }
+            .rules-grid .entry-head,
+            .rules-grid .entry-row { grid-template-columns: 1.6fr 1fr 34px; }
         }
+
+    @media screen and (max-width: 768px) {
+
+        #teamsTableBody td:nth-child(1)::before { content: "Team"; }
+        #teamsTableBody td:nth-child(2)::before { content: "Members"; }
+        #teamsTableBody td:nth-child(3)::before { content: "Total"; }
+        #teamsTableBody td:nth-child(4)::before { content: "Records"; }
+        #teamsTableBody td:nth-child(5)::before { content: "Action"; }
+
+        #rulesTableBody td:nth-child(1)::before { content: "Rule"; }
+        #rulesTableBody td:nth-child(2)::before { content: "Points"; }
+        #rulesTableBody td:nth-child(3)::before { content: "Action"; }
+
+        #staffTableBody td:nth-child(1)::before { content: "Name"; }
+        #staffTableBody td:nth-child(2)::before { content: "Role"; }
+        #staffTableBody td:nth-child(3)::before { content: "Action"; }
+
+        .members-cell { max-width: none; }
+        .status { max-width: none; }
+    }
 
     </style>
 </head>
 
 <body>
 
-    <div class="form-container">
+    <!-- MAIN NAVIGATION -->
 
-        <!-- LOGO -->
-        <img src="logo.png" alt="School Logo" class="logo">
+    <div class="nav-container">
 
-        <h2>Team Point Entry</h2>
+        <button
+        id="viewTabBtn"
+        class="active"
+        type="button"
+        onclick="showSection('view')">
 
-        <!-- TIMESTAMP -->
+            VIEW TEAM POINTS
 
-        <div class="field">
+        </button>
 
-            <label>Timestamp</label>
+        <button
+        id="manageTabBtn"
+        type="button"
+        onclick="showSection('manage')">
 
-            <input id="timestamp">
+            MANAGE TEAM POINTS
 
-            <div class="error-text"
-            id="timestamp-error"></div>
+        </button>
+
+        <button
+        id="topEarnersTabBtn"
+        type="button"
+        onclick="showSection('top')">
+
+            TOP POINT EARNER
+
+        </button>
+
+        <button
+        id="teamsTabBtn"
+        type="button"
+        onclick="showSection('teams')">
+
+            MANAGE TEAMS
+
+        </button>
+
+        <button
+        id="rulesTabBtn"
+        type="button"
+        onclick="showSection('rules')">
+
+            MANAGE RULES
+
+        </button>
+
+        <button
+        id="staffTabBtn"
+        type="button"
+        onclick="showSection('staff')">
+
+            MANAGE STAFF
+
+        </button>
+
+    </div>
+
+    <!-- VIEW TEAM POINTS -->
+
+    <div
+    class="form-container"
+    id="viewSection">
+
+        <div class="section-header">
+
+            <h2>View Team Points</h2>
+
+            <button
+            type="button"
+            onclick="openPointEntry()">
+
+                + POINTS
+
+            </button>
 
         </div>
 
-        <!-- TEAM -->
-
         <div class="field">
 
-            <label>Team</label>
+            <label>Select Team</label>
 
-            <input id="team"
-            class="team-field"
-            readonly>
-
-            <div class="error-text"
-            id="team-error"></div>
-
-        </div>
-
-        <!-- NAME -->
-
-        <div class="field">
-
-            <label>Name(s)</label>
-
-            <select id="names">
+            <select
+            id="viewTeamSelect"
+            onchange="loadViewTeamPoints()">
 
                 <option value="">
-                    Select Name
+                    Select Team
                 </option>
 
             </select>
 
-            <div class="error-text"
-            id="names-error"></div>
-
         </div>
-
-        <!-- AUTO DEDUCT RULES -->
-
-        <div class="field">
-
-            <label>Auto Deduct Rules</label>
-
-            <select id="autoDeductRules">
-
-                <option value="">
-                    Select Auto Deduct Rule
-                </option>
-
-            </select>
-
-            <div class="error-text"
-            id="autoDeductRules-error"></div>
-
-        </div>
-
-        <!-- REASON -->
-
-        <div class="field">
-
-            <label>Reason(s)</label>
-
-            <input id="reasons">
-
-            <div class="error-text"
-            id="reasons-error"></div>
-
-        </div>
-
-        <!-- POINTS -->
-
-        <div class="field">
-
-            <label>Points</label>
-
-            <input type="number"
-            id="points">
-
-            <div class="error-text"
-            id="points-error"></div>
-
-        </div>
-
-        <!-- SIGNATURE -->
-
-        <div class="field">
-
-            <label>Signature</label>
-
-            <select id="signature">
-
-                <option value="">
-                    Select Signature
-                </option>
-
-            </select>
-
-            <div class="error-text"
-            id="signature-error"></div>
-
-        </div>
-
-        <!-- BUTTONS -->
 
         <div class="buttons">
 
-            <button class="save-btn"
-            onclick="saveData()">
+            <button
+            class="refresh-btn"
+            type="button"
+            onclick="loadViewTeamPoints()">
 
-                Save
-
-            </button>
-
-            <button class="clear-btn"
-            onclick="clearForm()">
-
-                Clear
+                Refresh
 
             </button>
 
         </div>
 
-        <!-- SUCCESS -->
+        <div
+        class="summary-box hidden"
+        id="viewSummary">
 
-        <div class="success"
-        id="success-message"></div>
+            <div>
+                Selected Team:
+                <strong id="viewTeamName">-</strong>
+            </div>
 
+            <div>
+                Total Points:
+                <strong id="viewTeamPoints">0</strong>
+            </div>
+
+            <div>
+                Recorded Entries:
+                <strong id="viewTotalRecords">0</strong>
+            </div>
+
+        </div>
+
+        <div
+        class="empty-message"
+        id="viewEmptyMessage">
+
+            Select a team to load that team's point records.
+
+        </div>
+
+        <div
+        class="table-wrapper hidden"
+        id="viewTableWrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Team</th>
+                        <th>Name</th>
+                        <th>Reason</th>
+                        <th>Points</th>
+                        <th>By</th>
+                    </tr>
+                </thead>
+
+                <tbody id="viewTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- MANAGE TEAM POINTS -->
+
+    <div
+    class="form-container hidden"
+    id="manageSection">
+
+        <div class="section-header">
+            <h2>Manage Team Points</h2>
+        </div>
+
+        <div class="field">
+
+            <label>Select Team</label>
+
+            <select
+            id="manageTeamSelect"
+            onchange="loadManageTeamPoints()">
+
+                <option value="">
+                    Select Team
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="buttons">
+
+            <button
+            class="refresh-btn"
+            type="button"
+            onclick="loadManageTeamPoints()">
+
+                Refresh
+
+            </button>
+
+        </div>
+
+        <div
+        class="summary-box hidden"
+        id="manageSummary">
+
+            <div>
+                Selected Team:
+                <strong id="manageTeamName">-</strong>
+            </div>
+
+            <div>
+                Total Points:
+                <strong id="manageTeamPoints">0</strong>
+            </div>
+
+            <div>
+                Recorded Entries:
+                <strong id="manageTotalRecords">0</strong>
+            </div>
+
+        </div>
+
+        <div
+        class="empty-message"
+        id="manageEmptyMessage">
+
+            Select a team to manage its point records.
+
+        </div>
+
+        <div
+        class="table-wrapper hidden"
+        id="manageTableWrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Team</th>
+                        <th>Name</th>
+                        <th>Reason</th>
+                        <th>Points</th>
+                        <th>By</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="manageTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- TOP POINT EARNER -->
+
+    <div
+    class="form-container hidden"
+    id="topSection">
+
+        <div class="section-header">
+            <h2>Top Point Earner</h2>
+        </div>
+
+        <div class="field">
+
+            <label>Select Ranking Period</label>
+
+            <select
+            id="topPeriodSelect"
+            onchange="changeTopPeriod()">
+
+                <option value="weekly">
+                    Weekly Top 6
+                </option>
+
+                <option value="monthly">
+                    Monthly Top 6
+                </option>
+
+                <option value="termly">
+                    Termly Top 6
+                </option>
+
+            </select>
+
+        </div>
+
+        <div
+        class="field"
+        id="weeklyDateField">
+
+            <label>Select a Date</label>
+
+            <input
+            type="date"
+            id="weeklyReferenceDate"
+            onchange="loadTopPointEarners()">
+
+        </div>
+
+        <div
+        class="field hidden"
+        id="monthlyDateField">
+
+            <label>Select a Month</label>
+
+            <input
+            type="month"
+            id="monthlyReferenceMonth"
+            onchange="loadTopPointEarners()">
+
+        </div>
+
+        <div
+        class="field hidden"
+        id="termField">
+
+            <label>Select a Term</label>
+
+            <select
+            id="termSelect"
+            onchange="loadTopPointEarners()">
+
+                <option value="">
+                    Select Term
+                </option>
+
+            </select>
+
+        </div>
+
+        <div
+        class="period-label"
+        id="topPeriodLabel">
+
+            Select a period to load the ranking.
+
+        </div>
+
+        <div class="buttons">
+
+            <button
+            class="refresh-btn"
+            type="button"
+            onclick="loadTopPointEarners()">
+
+                Refresh
+
+            </button>
+
+        </div>
+
+        <div
+        class="empty-message"
+        id="topEmptyMessage">
+
+            Select a period to load the top six point earners.
+
+        </div>
+
+        <div
+        class="table-wrapper hidden"
+        id="topTableWrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Team</th>
+                        <th>Net Points</th>
+                    </tr>
+                </thead>
+
+                <tbody id="topTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- MANAGE TEAMS -->
+
+    <div class="form-container hidden" id="teamsSection">
+
+        <div class="section-header">
+            <h2>Add Students</h2>
+            <button class="hidden" id="openStudentsBtn" type="button" onclick="openStudentsPanel()">+ Add Students</button>
+        </div>
+
+        <div id="studentsPanel">
+
+            <div class="entry-grid">
+                <div class="entry-head">
+                    <span>Name</span>
+                    <span>Team</span>
+                    <span></span>
+                </div>
+                <div id="studentRows"></div>
+            </div>
+
+            <datalist id="teamOptions"></datalist>
+
+            <div class="hint" id="studentCount">0 students ready to submit. Pick an existing team or type a new one.</div>
+            <div class="error-text" id="studentsError"></div>
+
+            <div class="buttons entry-buttons">
+                <button class="edit-btn" type="button" onclick="addEntryRow('students')">Add another student</button>
+                <button class="save-btn" id="submitStudentsBtn" type="button" onclick="submitStudents()">Submit</button>
+                <button class="clear-btn" type="button" onclick="clearStudents()">Clear</button>
+                <button class="close-btn" type="button" onclick="closeStudentsPanel()">Close</button>
+            </div>
+
+        </div>
+
+        <div class="status hidden" id="teamsStatus"></div>
+
+        <h2 class="sub-title">Existing Teams</h2>
+
+        <div class="empty-message" id="teamsEmptyMessage">Loading teams...</div>
+
+        <div class="table-wrapper hidden" id="teamsTableWrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Team</th>
+                        <th>Members</th>
+                        <th>Total</th>
+                        <th>Records</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="teamsTableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- MANAGE RULES -->
+
+    <div class="form-container hidden" id="rulesSection">
+
+        <div class="section-header">
+            <h2>Add Auto Deduct Rules</h2>
+        </div>
+
+        <div class="entry-grid rules-grid">
+            <div class="entry-head">
+                <span>Rule</span>
+                <span>Points to Deduct</span>
+                <span></span>
+            </div>
+            <div id="ruleRows"></div>
+        </div>
+
+        <div class="hint" id="ruleCount">0 rules ready to submit. Enter a positive number: it is saved as a deduction (5 becomes -5).</div>
+        <div class="error-text" id="rulesError"></div>
+
+        <div class="buttons entry-buttons">
+            <button class="edit-btn" type="button" onclick="addEntryRow('rules')">Add another rule</button>
+            <button class="save-btn" id="submitRulesBtn" type="button" onclick="submitRules()">Submit</button>
+            <button class="clear-btn" type="button" onclick="clearRules()">Clear</button>
+        </div>
+
+        <div class="status hidden" id="rulesStatus"></div>
+
+        <h2 class="sub-title">Existing Rules</h2>
+
+        <div class="empty-message" id="rulesEmptyMessage">No auto deduct rules yet. Add one above.</div>
+
+        <div class="table-wrapper hidden" id="rulesTableWrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rule</th>
+                        <th>Points</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="rulesTableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- MANAGE STAFF -->
+
+    <div class="form-container hidden" id="staffSection">
+
+        <div class="section-header">
+            <h2>Add Staff</h2>
+        </div>
+
+        <div class="field">
+            <label>Name</label>
+            <input id="newStaffName" placeholder="e.g. Mr. Jallow" autocomplete="off">
+            <div class="error-text" id="newStaffName-error"></div>
+        </div>
+
+        <div class="field">
+            <label>Role</label>
+            <input id="newStaffRole" value="Teacher" autocomplete="off">
+            <div class="hint">Leave as Teacher or change it (e.g. Principal).</div>
+            <div class="error-text" id="newStaffRole-error"></div>
+        </div>
+
+        <div class="buttons">
+            <button class="save-btn" id="addStaffBtn" type="button" onclick="addStaff()">Add Staff</button>
+            <button class="clear-btn" type="button" onclick="clearStaffForm()">Clear</button>
+        </div>
+
+        <div class="status hidden" id="staffStatus"></div>
+
+        <h2 class="sub-title">Current Staff</h2>
+
+        <div class="empty-message" id="staffEmptyMessage">No staff yet. Add one above.</div>
+
+        <div class="table-wrapper hidden" id="staffTableWrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="staffTableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- TEAM POINT ENTRY FORM -->
+
+    <div
+    class="modal-overlay"
+    id="pointEntryModal">
+
+        <div class="modal">
+
+            <div class="modal-header">
+                <h2 id="entryTitle">Team Point Entry</h2>
+            </div>
+
+            <div class="field">
+
+                <label>Date</label>
+
+                <input
+                type="date"
+                id="timestamp">
+
+                <div
+                class="error-text"
+                id="timestamp-error"></div>
+
+            </div>
+
+            <div class="field">
+
+                <label>Team</label>
+
+                <input
+                id="team"
+                class="team-field"
+                readonly>
+
+                <div
+                class="error-text"
+                id="team-error"></div>
+
+            </div>
+
+            <div class="field">
+
+                <label>Name</label>
+
+                <select id="names">
+
+                    <option value="">
+                        Select Name
+                    </option>
+
+                </select>
+
+                <div
+                class="error-text"
+                id="names-error"></div>
+
+            </div>
+
+            <div class="field">
+
+                <label>Auto Deduct Rules</label>
+
+                <select id="autoDeductRules">
+
+                    <option value="">
+                        Select Auto Deduct Rule
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="field">
+
+                <label>Reason(s)</label>
+
+                <input id="reasons">
+
+                <div
+                class="error-text"
+                id="reasons-error"></div>
+
+            </div>
+
+            <div class="field">
+
+                <label>Points</label>
+
+                <input
+                type="number"
+                step="1"
+                id="points">
+
+                <div
+                class="error-text"
+                id="points-error"></div>
+
+            </div>
+
+            <div class="field">
+
+                <label>By</label>
+
+                <select id="signature">
+
+                    <option value="">
+                        Select Staff
+                    </option>
+
+                </select>
+
+                <div
+                class="error-text"
+                id="signature-error"></div>
+
+            </div>
+
+            <div class="buttons">
+
+                <button
+                class="save-btn"
+                id="saveBtn"
+                type="button"
+                onclick="savePoint()">
+
+                    Save
+
+                </button>
+
+                <button
+                class="clear-btn"
+                id="clearBtn"
+                type="button"
+                onclick="clearPointForm()">
+
+                    Clear
+
+                </button>
+
+                <button
+                class="close-btn"
+                id="closeBtn"
+                type="button"
+                onclick="closePointEntry()">
+
+                    Close
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CUSTOM DELETE CONFIRMATION -->
+
+    <div
+    class="delete-modal-overlay"
+    id="deleteConfirmModal">
+
+        <div class="delete-modal">
+
+            <h2>Delete Team Point Record</h2>
+
+            <p>
+                Review the record below before deleting it.
+                This action cannot be undone.
+            </p>
+
+            <div class="delete-record-details">
+
+                <div>
+                    <strong>Date:</strong>
+                    <span id="deleteRecordDate">-</span>
+                </div>
+
+                <div>
+                    <strong>Name:</strong>
+                    <span id="deleteRecordName">-</span>
+                </div>
+
+                <div>
+                    <strong>Team:</strong>
+                    <span id="deleteRecordTeam">-</span>
+                </div>
+
+                <div>
+                    <strong>Reason:</strong>
+                    <span id="deleteRecordReason">-</span>
+                </div>
+
+                <div>
+                    <strong>Points:</strong>
+                    <span id="deleteRecordPoints">-</span>
+                </div>
+
+            </div>
+
+            <div class="delete-modal-buttons">
+
+                <button
+                class="cancel-delete-btn"
+                type="button"
+                onclick="closeDeleteConfirmation()">
+
+                    Cancel
+
+                </button>
+
+                <button
+                class="confirm-delete-btn"
+                id="confirmDeleteBtn"
+                type="button"
+                onclick="confirmDeletePoint()">
+
+                    Delete Record
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- GENERIC CONFIRMATION (delete team / delete rule) -->
+
+    <div class="delete-modal-overlay" id="genericConfirmModal">
+        <div class="delete-modal">
+            <h2 id="confirmTitle">Confirm</h2>
+            <p id="confirmMessage"></p>
+            <div class="delete-record-details" id="confirmDetails"></div>
+            <div class="delete-modal-buttons">
+                <button class="cancel-delete-btn" type="button" onclick="closeGenericConfirm()">Cancel</button>
+                <button class="confirm-delete-btn" id="genericConfirmBtn" type="button" onclick="runGenericConfirm()">Delete</button>
+            </div>
+        </div>
     </div>
 
     <script>
 
-        // APPS SCRIPT
         const WEB_APP_URL =
-        "https://script.google.com/macros/s/AKfycbyV583zsZvdfLhlC1e9kMyTZBBHcoP8Rvm_AxoVF4JTYbtbSEvz9Kmy96v1YkJ2eXWg/exec";
+        "https://script.google.com/macros/s/AKfycbw9Mx303qOdxzNwh8GUI1soUhCD9T_GAcsGlCzA43BeVQHH4orp2gbgDNVmUEgZk1P_/exec";
 
-        // TEAM DATA
-        const teams = {
+        const ENTRY_MODAL_STORAGE_KEY =
+        "teamPointEntryOpen";
 
-            "Bright Stars": [
-
-                "Borry",
-                "Seikou",
-                "Naffisatou",
-                "Rohey",
-                "Mama",
-                "Yusupha",
-                "Ebrima",
-                "Khalifa",
-                "Michael",
-                "Choro",
-                "Mohammed J",
-                "Aisha",
-                "Bright Stars"
-            ],
-
-            "United Brains": [
-
-                "Lamin D",
-                "Lamin C",
-                "Yaya",
-                "Mohammed A",
-                "Jalimaka",
-                "Jainaba",
-                "Fatou",
-                "Hulay",
-                "Mariama",
-                "Sainabou",
-                "Sadio",
-                "Sidiki",
-                "Sally",
-                "Oumie",
-                "Neovie",
-                "United Brains"
-            ]
+        const state = {
+            students: [],
+            staff: [],
+            rules: [],
+            teams: [],
+            terms: [],
+            manageRecords: [],
+            editingRecordId: "",
+            pendingDeleteRecordId: "",
+            activeSection: "view",
+            jsonpCounter: 0,
+            submissionQueue: [],
+            processingQueue: false,
+            teamsOverview: [],
+            pendingConfirm: null
         };
 
-        // SIGNATURES
-        const signatures = [
-
-            "Dr Jobarteh",
-            "Ms Saye",
-            "Mr Jobe",
-            "Ms Beau",
-            "Mr Alfuseny",
-            "Mr Amfall",
-            "Mr LT",
-            "Mr Oduyebo",
-            "Mr Sylla",
-            "Ms Yasai",
-            "Mr Hadim"
-        ];
-
-        // AUTO DEDUCTION RULES
-        const autoDeductRulesData = {
-
-            "BOOKS LEFT IN CLASS": -5,
-            "COMING TO CLASS WITHOUT CORRECT BOOKS": -20,
-            "NOT TAKING PART IN MORNING CLEANING ROUTINES": -10,
-            "NOT WEARING UNIFORM TO ASSEMBLY": -20,
-            "COMING LATE TO ASSEMBLY": -10,
-            "COMING LATE TO CLASS": -10,
-            "SUSPENSION": -100,
-            "INCOMPLETE ROUTINES": -30,
-            "NO HOME WORK": -20,
-            "PHYSICAL ALTERCATION": -30
-        };
-
-        // DOM
         const timestamp =
         document.getElementById("timestamp");
 
@@ -393,160 +1583,710 @@
         const signature =
         document.getElementById("signature");
 
-        // AUTO DATE
-        setToday();
+        const viewTeamSelect =
+        document.getElementById("viewTeamSelect");
 
-        function setToday() {
+        const manageTeamSelect =
+        document.getElementById("manageTeamSelect");
 
-            timestamp.value =
-            new Date().toISOString().split('T')[0];
-        }
+        const topPeriodSelect =
+        document.getElementById("topPeriodSelect");
 
-        // LOAD STUDENTS
+        const weeklyReferenceDate =
+        document.getElementById("weeklyReferenceDate");
 
-        const allStudents = [
+        const monthlyReferenceMonth =
+        document.getElementById("monthlyReferenceMonth");
 
-            ...teams["Bright Stars"],
-            ...teams["United Brains"]
+        const termSelect =
+        document.getElementById("termSelect");
 
-        ].sort((a, b) => a.localeCompare(b));
+        document.addEventListener(
+        "DOMContentLoaded",
+        function () {
 
-        allStudents.forEach(name => {
+            setToday();
+            setTopDefaults();
+            setEventListeners();
+            setManagementListeners();
+            /*
+             * Load all dropdown data quietly in the background.
+             */
+            loadFormData(true);
 
-            const option =
-            document.createElement("option");
-
-            option.value = name;
-            option.textContent = name;
-
-            names.appendChild(option);
+            /*
+             * Keeps the entry form open after browser refresh.
+             * It closes only when the user clicks Close.
+             */
+            if (
+                sessionStorage.getItem(
+                    ENTRY_MODAL_STORAGE_KEY
+                ) === "true"
+            ) {
+                openPointEntry();
+            }
         });
 
-        // LOAD SIGNATURES
+        function setEventListeners() {
 
-        signatures.forEach(sig => {
+            names.addEventListener(
+            "change",
+            function () {
 
-            const option =
-            document.createElement("option");
+                const student =
+                getSelectedStudent();
 
-            option.value = sig;
-            option.textContent = sig;
+                teamField.value =
+                student
+                    ? student.team
+                    : "";
+            });
 
-            signature.appendChild(option);
-        });
+            autoDeductRules.addEventListener(
+            "change",
+            function () {
 
-        // LOAD AUTO DEDUCTION RULES
+                const rule =
+                getSelectedRule();
 
-        Object.entries(autoDeductRulesData)
-        .forEach(([rule, point]) => {
-
-            const option =
-            document.createElement("option");
-
-            option.value = rule;
-
-            option.textContent =
-            `${rule} (${point} POINTS)`;
-
-            autoDeductRules.appendChild(option);
-        });
-
-        // AUTO TEAM
-
-        names.addEventListener("change", function () {
-
-            const selectedName = this.value;
-
-            for (const team in teams) {
-
-                if (
-                    teams[team].includes(selectedName)
-                ) {
-
-                    teamField.value = team;
+                if (!rule) {
                     return;
                 }
+
+                reasons.value =
+                rule.rule;
+
+                points.value =
+                rule.points;
+            });
+
+            document
+            .getElementById("manageTableBody")
+            .addEventListener(
+            "click",
+            function (event) {
+
+                const button =
+                event.target.closest(
+                    "button[data-action]"
+                );
+
+                if (!button) {
+                    return;
+                }
+
+                const recordId =
+                button.dataset.recordId;
+
+                if (
+                    button.dataset.action === "edit"
+                ) {
+                    editPointRecord(recordId);
+                }
+
+                if (
+                    button.dataset.action === "delete"
+                ) {
+                    deletePointRecord(recordId);
+                }
+            });
+
+            window.addEventListener(
+            "focus",
+            function () {
+                refreshCurrentSection();
+            });
+
+            setInterval(
+            refreshCurrentSection,
+            60000);
+
+            setInterval(
+            refreshFormDataInBackground,
+            300000);
+        }
+
+        async function loadFormData(silent = false) {
+
+            try {
+
+                const response =
+                await jsonpRequest({
+                    action: "getFormData"
+                });
+
+                if (!response.success) {
+                    throw new Error(
+                        response.message ||
+                        "Unable to load system data."
+                    );
+                }
+
+                state.students =
+                response.students || [];
+
+                state.staff =
+                response.staff || [];
+
+                state.rules =
+                response.rules || [];
+
+                state.teams =
+                response.teams || [];
+
+                state.terms =
+                response.terms || [];
+
+                populateNames();
+                populateRules();
+                populateStaff();
+                populateTeamFilters();
+                populateTeamOptions();
+                populateTerms();
+                renderRulesTable();
+                renderStaffTable();
+            } catch (error) {
+                console.error(
+                    "Unable to load Team Point data:",
+                    error
+                );
+            }
+        }
+
+        function refreshFormDataInBackground() {
+
+            const entryModal =
+            document.getElementById(
+                "pointEntryModal"
+            );
+
+            const deleteModal =
+            document.getElementById(
+                "deleteConfirmModal"
+            );
+
+            if (
+                entryModal.classList.contains("show") ||
+                deleteModal.classList.contains("show") ||
+                document.getElementById("genericConfirmModal").classList.contains("show")
+            ) {
+                return;
             }
 
-            teamField.value = "";
-        });
+            loadFormData(true);
+        }
 
-        // AUTO FILL REASON AND POINTS
+        function populateNames() {
 
-        autoDeductRules.addEventListener(
-        "change", function () {
+            const selectedValue =
+            names.value;
 
-            const selectedRule =
-            this.value;
+            names.innerHTML =
+            '<option value="">Select Name</option>';
 
-            if (selectedRule === "") {
+            state.students.forEach(student => {
 
-                reasons.value = "";
-                points.value = "";
+                const option =
+                document.createElement("option");
+
+                option.value =
+                student.id;
+
+                option.dataset.name =
+                student.name;
+
+                option.dataset.team =
+                student.team;
+
+                /*
+                 * Name only. Team remains hidden and auto-fills.
+                 */
+                option.textContent =
+                student.name;
+
+                names.appendChild(option);
+            });
+
+            names.value =
+            selectedValue;
+        }
+
+        function populateRules() {
+
+            const selectedValue =
+            autoDeductRules.value;
+
+            autoDeductRules.innerHTML =
+            '<option value="">Select Auto Deduct Rule</option>';
+
+            state.rules.forEach((rule, index) => {
+
+                const option =
+                document.createElement("option");
+
+                option.value =
+                String(index);
+
+                option.textContent =
+                `${rule.rule} (${formatPoints(rule.points)} POINTS)`;
+
+                autoDeductRules.appendChild(option);
+            });
+
+            autoDeductRules.value =
+            selectedValue;
+        }
+
+        function populateStaff() {
+
+            const selectedValue =
+            signature.value;
+
+            signature.innerHTML =
+            '<option value="">Select Staff</option>';
+
+            state.staff.forEach(staff => {
+
+                const option =
+                document.createElement("option");
+
+                option.value =
+                staff.id;
+
+                option.dataset.name =
+                staff.name;
+
+                /*
+                 * Shows staff name only.
+                 */
+                option.textContent =
+                staff.name;
+
+                signature.appendChild(option);
+            });
+
+            signature.value =
+            selectedValue;
+        }
+
+        function populateTeamFilters() {
+
+            const selectors = [
+                viewTeamSelect,
+                manageTeamSelect
+            ];
+
+            selectors.forEach(selector => {
+
+                const currentValue =
+                selector.value;
+
+                selector.innerHTML =
+                '<option value="">Select Team</option>';
+
+                state.teams.forEach(team => {
+
+                    const option =
+                    document.createElement("option");
+
+                    option.value =
+                    team;
+
+                    option.textContent =
+                    team;
+
+                    selector.appendChild(option);
+                });
+
+                if (
+                    state.teams.includes(currentValue)
+                ) {
+                    selector.value =
+                    currentValue;
+                }
+            });
+            updateNoTeamHints();
+        }
+
+        function updateNoTeamHints() {
+            const hint =
+            "No teams yet. Open MANAGE TEAMS to create one.";
+            [
+                ["viewEmptyMessage",
+                 "Select a team to load that team's point records."],
+                ["manageEmptyMessage",
+                 "Select a team to manage its point records."]
+            ].forEach(pair => {
+                const element =
+                document.getElementById(pair[0]);
+                if (!state.teams.length) {
+                    element.textContent = hint;
+                } else if (
+                    element.textContent.trim() === hint
+                ) {
+                    element.textContent = pair[1];
+                }
+            });
+        }
+        function populateTerms() {
+
+            const currentValue =
+            termSelect.value;
+
+            termSelect.innerHTML =
+            '<option value="">Select Term</option>';
+
+            state.terms.forEach(term => {
+
+                const option =
+                document.createElement("option");
+
+                option.value =
+                term.id;
+
+                option.textContent =
+                `${term.term} (${formatUKDate(term.startDate)} - ${formatUKDate(term.endDate)})`;
+
+                termSelect.appendChild(option);
+            });
+
+            if (
+                state.terms.some(term =>
+                    String(term.id) ===
+                    String(currentValue)
+                )
+            ) {
+                termSelect.value =
+                currentValue;
 
                 return;
             }
 
-            reasons.value = selectedRule;
+            const activeTerm =
+            state.terms.find(term => {
+                return term.active;
+            });
 
-            points.value =
-            autoDeductRulesData[selectedRule];
-        });
+            if (activeTerm) {
+                termSelect.value =
+                activeTerm.id;
+            }
+        }
 
-        // CLEAR FORM
+        const SECTION_IDS = {
+            view: "viewSection",
+            manage: "manageSection",
+            top: "topSection",
+            teams: "teamsSection",
+            rules: "rulesSection",
+            staff: "staffSection"
+        };
+        const TAB_IDS = {
+            view: "viewTabBtn",
+            manage: "manageTabBtn",
+            top: "topEarnersTabBtn",
+            teams: "teamsTabBtn",
+            rules: "rulesTabBtn",
+            staff: "staffTabBtn"
+        };
+        function showSection(sectionName) {
+            state.activeSection =
+            sectionName;
+            Object.keys(SECTION_IDS).forEach(name => {
+                document
+                .getElementById(SECTION_IDS[name])
+                .classList.toggle(
+                    "hidden",
+                    sectionName !== name
+                );
+                document
+                .getElementById(TAB_IDS[name])
+                .classList.toggle(
+                    "active",
+                    sectionName === name
+                );
+            });
+            if (
+                sectionName === "view" &&
+                viewTeamSelect.value
+            ) {
+                loadViewTeamPoints(true);
+            }
+            if (
+                sectionName === "manage" &&
+                manageTeamSelect.value
+            ) {
+                loadManageTeamPoints(true);
+            }
+            if (sectionName === "top") {
+                updateTopPeriodFields();
+                loadTopPointEarners(true);
+            }
+            if (sectionName === "teams") {
+                loadTeamsOverview(true);
+            }
+            if (sectionName === "rules") {
+                renderRulesTable();
+                loadFormData(true);
+            }
+            if (sectionName === "staff") {
+                renderStaffTable();
+                loadFormData(true);
+            }
+        }
 
-        function clearForm() {
+        function refreshCurrentSection() {
+
+            if (
+                document.visibilityState !== "visible"
+            ) {
+                return;
+            }
+
+            if (
+                state.activeSection === "view" &&
+                viewTeamSelect.value
+            ) {
+                loadViewTeamPoints(true);
+            }
+
+            if (
+                state.activeSection === "manage" &&
+                manageTeamSelect.value
+            ) {
+                loadManageTeamPoints(true);
+            }
+
+            if (state.activeSection === "top") {
+                loadTopPointEarners(true);
+            }
+            if (state.activeSection === "teams") {
+                loadTeamsOverview(true);
+            }
+            if (state.activeSection === "rules" || state.activeSection === "staff") {
+                loadFormData(true);
+            }
+        }
+        function setToday() {
+
+            const now =
+            new Date();
+
+            const year =
+            now.getFullYear();
+
+            const month =
+            String(now.getMonth() + 1)
+            .padStart(2, "0");
+
+            const day =
+            String(now.getDate())
+            .padStart(2, "0");
+
+            timestamp.value =
+            `${year}-${month}-${day}`;
+        }
+
+        function setTopDefaults() {
+
+            const now =
+            new Date();
+
+            const year =
+            now.getFullYear();
+
+            const month =
+            String(now.getMonth() + 1)
+            .padStart(2, "0");
+
+            const day =
+            String(now.getDate())
+            .padStart(2, "0");
+
+            weeklyReferenceDate.value =
+            `${year}-${month}-${day}`;
+
+            monthlyReferenceMonth.value =
+            `${year}-${month}`;
+        }
+
+        function changeTopPeriod() {
+
+            updateTopPeriodFields();
+            loadTopPointEarners();
+        }
+
+        function updateTopPeriodFields() {
+
+            const period =
+            topPeriodSelect.value;
+
+            document
+            .getElementById("weeklyDateField")
+            .classList.toggle(
+                "hidden",
+                period !== "weekly"
+            );
+
+            document
+            .getElementById("monthlyDateField")
+            .classList.toggle(
+                "hidden",
+                period !== "monthly"
+            );
+
+            document
+            .getElementById("termField")
+            .classList.toggle(
+                "hidden",
+                period !== "termly"
+            );
+        }
+
+        function openPointEntry() {
+
+            resetPointFormForNextEntry();
+
+            document
+            .getElementById("pointEntryModal")
+            .classList.add("show");
+
+            sessionStorage.setItem(
+                ENTRY_MODAL_STORAGE_KEY,
+                "true"
+            );
+        }
+
+        function closePointEntry() {
+
+            document
+            .getElementById("pointEntryModal")
+            .classList.remove("show");
+
+            sessionStorage.removeItem(
+                ENTRY_MODAL_STORAGE_KEY
+            );
+
+            resetPointFormForNextEntry();
+        }
+
+        function clearPointForm() {
+            resetPointFormForNextEntry();
+        }
+
+        function resetPointFormForNextEntry() {
+
+            state.editingRecordId = "";
+
+            removeTemporaryOptions();
+
+            document
+            .getElementById("entryTitle")
+            .textContent =
+            "Team Point Entry";
+
+            document
+            .getElementById("saveBtn")
+            .textContent =
+            "Save";
 
             setToday();
 
             teamField.value = "";
-
-            names.selectedIndex = 0;
-
-            autoDeductRules.selectedIndex = 0;
-
+            names.value = "";
+            autoDeductRules.value = "";
             reasons.value = "";
-
             points.value = "";
-
-            signature.selectedIndex = 0;
+            signature.value = "";
 
             clearErrors();
-
-            document.getElementById(
-                "success-message"
-            ).textContent = "";
         }
 
-        // CLEAR ERRORS
+        function removeTemporaryOptions() {
+
+            document
+            .querySelectorAll(
+                "[data-temporary='true']"
+            )
+            .forEach(option => {
+                option.remove();
+            });
+        }
+
+        function getSelectedStudent() {
+
+            const option =
+            names.options[
+                names.selectedIndex
+            ];
+
+            if (
+                !option ||
+                !option.dataset.name
+            ) {
+                return null;
+            }
+
+            return {
+                name: option.dataset.name,
+                team: option.dataset.team
+            };
+        }
+
+        function getSelectedRule() {
+
+            if (
+                autoDeductRules.value === ""
+            ) {
+                return null;
+            }
+
+            return state.rules[
+                Number(autoDeductRules.value)
+            ] || null;
+        }
+
+        function getSelectedStaff() {
+
+            const option =
+            signature.options[
+                signature.selectedIndex
+            ];
+
+            if (
+                !option ||
+                !option.dataset.name
+            ) {
+                return null;
+            }
+
+            return {
+                name: option.dataset.name
+            };
+        }
 
         function clearErrors() {
 
             document
             .querySelectorAll(".error")
             .forEach(field => {
-
                 field.classList.remove("error");
             });
 
             document
             .querySelectorAll(".error-text")
             .forEach(error => {
-
                 error.textContent = "";
             });
         }
 
-        // VALIDATE
-
-        function validateForm() {
+        function validatePointForm() {
 
             clearErrors();
 
             let valid = true;
 
             const fields = [
-
                 "timestamp",
                 "team",
                 "names",
@@ -566,78 +2306,1693 @@
                 );
 
                 if (
-                    field.value.trim() === ""
+                    String(field.value || "")
+                    .trim() === ""
                 ) {
-
                     field.classList.add("error");
 
                     error.textContent =
-                    "This field is required";
+                    "This field is required.";
 
                     valid = false;
                 }
             });
 
+            if (
+                points.value !== "" &&
+                !Number.isFinite(
+                    Number(points.value)
+                )
+            ) {
+                points.classList.add("error");
+
+                document
+                .getElementById("points-error")
+                .textContent =
+                "Enter a valid number.";
+
+                valid = false;
+            }
+
             return valid;
         }
 
-        // SAVE
+        /*
+         * Immediate form response:
+         * captures data, clears fields, then queues silent save.
+         */
+        function savePoint() {
 
-        async function saveData() {
+            if (!validatePointForm()) {
+                return;
+            }
 
-            if (!validateForm()) return;
+            const student =
+            getSelectedStudent();
 
-            document.getElementById(
-                "success-message"
-            ).textContent = "";
+            const staff =
+            getSelectedStaff();
+
+            if (!student || !staff) {
+                return;
+            }
+
+            const selectedTeam =
+            teamField.value;
+
+            const requestData = {
+                action: state.editingRecordId
+                    ? "updatePoint"
+                    : "addPoint",
+
+                recordId:
+                state.editingRecordId,
+
+                date:
+                timestamp.value,
+
+                team:
+                selectedTeam,
+
+                name:
+                student.name,
+
+                reason:
+                reasons.value.trim(),
+
+                points:
+                points.value,
+
+                by:
+                staff.name
+            };
+
+            /*
+             * Clear immediately.
+             * The user can enter the next record at once.
+             */
+            resetPointFormForNextEntry();
+
+            /*
+             * Submit quietly in the background.
+             * The form stays open and shows no message.
+             */
+            state.submissionQueue.push({
+                requestData: requestData,
+                team: selectedTeam
+            });
+
+            processSubmissionQueue();
+        }
+
+        async function processSubmissionQueue() {
+
+            if (
+                state.processingQueue ||
+                !state.submissionQueue.length
+            ) {
+                return;
+            }
+
+            state.processingQueue = true;
+
+            while (
+                state.submissionQueue.length
+            ) {
+                const submission =
+                state.submissionQueue[0];
+
+                try {
+
+                    const response =
+                    await jsonpRequest(
+                        submission.requestData
+                    );
+
+                    if (
+                        response &&
+                        response.success
+                    ) {
+                        refreshAfterSaving(
+                            submission.team
+                        );
+
+                    } else {
+                        console.error(
+                            "Background Team Point save failed:",
+                            response
+                        );
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Background Team Point save failed:",
+                        error
+                    );
+
+                } finally {
+
+                    state.submissionQueue.shift();
+                }
+            }
+
+            state.processingQueue = false;
+        }
+
+        function refreshAfterSaving(team) {
+
+            if (
+                viewTeamSelect.value === team
+            ) {
+                loadViewTeamPoints(true);
+            }
+
+            if (
+                manageTeamSelect.value === team
+            ) {
+                loadManageTeamPoints(true);
+            }
+
+            if (
+                state.activeSection === "top"
+            ) {
+                loadTopPointEarners(true);
+            }
+        }
+
+        async function loadViewTeamPoints(silent = false) {
+
+            const team =
+            viewTeamSelect.value;
+
+            if (!team) {
+                resetViewSection();
+                return;
+            }
 
             try {
 
-                fetch(WEB_APP_URL, {
-
-                    method: "POST",
-
-                    body: JSON.stringify({
-
-                        timestamp: timestamp.value,
-                        team: teamField.value,
-                        names: names.value,
-                        reasons: reasons.value,
-                        points: points.value,
-                        signature: signature.value
-                    })
+                const response =
+                await jsonpRequest({
+                    action: "getTeamPoints",
+                    team: team
                 });
 
-                const success =
-                document.getElementById(
-                    "success-message"
-                );
+                if (!response.success) {
+                    throw new Error(
+                        response.message ||
+                        "Unable to load team points."
+                    );
+                }
 
-                success.style.color = "green";
+                renderViewSummary(response);
+                renderViewTable(response.records || []);
 
-                success.textContent =
-                "Saved successfully";
+            } catch (error) {
 
-                clearForm();
+                console.error(error);
 
-            } catch (err) {
-
-                console.error(err);
-
-                const success =
-                document.getElementById(
-                    "success-message"
-                );
-
-                success.style.color = "red";
-
-                success.textContent =
-                "Failed to save";
+                if (!silent) {
+                    resetViewSection();
+                }
             }
+        }
+
+        function resetViewSection() {
+
+            document
+            .getElementById("viewSummary")
+            .classList.add("hidden");
+
+            document
+            .getElementById("viewTableWrapper")
+            .classList.add("hidden");
+
+            document
+            .getElementById("viewEmptyMessage")
+            .classList.remove("hidden");
+        }
+
+        function renderViewSummary(response) {
+
+            document
+            .getElementById("viewSummary")
+            .classList.remove("hidden");
+
+            document
+            .getElementById("viewTeamName")
+            .textContent =
+            response.team || "-";
+
+            document
+            .getElementById("viewTeamPoints")
+            .textContent =
+            formatPoints(
+                response.totalPoints || 0
+            );
+
+            document
+            .getElementById("viewTotalRecords")
+            .textContent =
+            response.totalRecords || 0;
+        }
+
+        function renderViewTable(records) {
+
+            const tableBody =
+            document.getElementById(
+                "viewTableBody"
+            );
+
+            tableBody.innerHTML = "";
+
+            if (!records.length) {
+
+                document
+                .getElementById("viewTableWrapper")
+                .classList.add("hidden");
+
+                document
+                .getElementById("viewEmptyMessage")
+                .classList.remove("hidden");
+
+                document
+                .getElementById("viewEmptyMessage")
+                .textContent =
+                "No point records have been recorded for this team.";
+
+                return;
+            }
+
+            document
+            .getElementById("viewEmptyMessage")
+            .classList.add("hidden");
+
+            document
+            .getElementById("viewTableWrapper")
+            .classList.remove("hidden");
+
+            records.forEach(record => {
+
+                const row =
+                document.createElement("tr");
+
+                const pointClass =
+                Number(record.points) >= 0
+                    ? "positive-points"
+                    : "negative-points";
+
+                row.innerHTML = `
+                    <td>${escapeHtml(formatUKDate(record.date))}</td>
+                    <td>${escapeHtml(record.team)}</td>
+                    <td>${escapeHtml(record.name)}</td>
+                    <td>${escapeHtml(record.reason)}</td>
+                    <td class="${pointClass}">
+                        ${escapeHtml(formatPoints(record.points))}
+                    </td>
+                    <td>${escapeHtml(record.by)}</td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        async function loadManageTeamPoints(silent = false) {
+
+            const team =
+            manageTeamSelect.value;
+
+            if (!team) {
+                resetManageSection();
+                return;
+            }
+
+            try {
+
+                const response =
+                await jsonpRequest({
+                    action: "getTeamPoints",
+                    team: team
+                });
+
+                if (!response.success) {
+                    throw new Error(
+                        response.message ||
+                        "Unable to load team point records."
+                    );
+                }
+
+                state.manageRecords =
+                response.records || [];
+
+                renderManageSummary(response);
+                renderManageTable(
+                    state.manageRecords
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+                if (!silent) {
+                    resetManageSection();
+                }
+            }
+        }
+
+        function resetManageSection() {
+
+            state.manageRecords = [];
+
+            document
+            .getElementById("manageSummary")
+            .classList.add("hidden");
+
+            document
+            .getElementById("manageTableWrapper")
+            .classList.add("hidden");
+
+            document
+            .getElementById("manageEmptyMessage")
+            .classList.remove("hidden");
+        }
+
+        function renderManageSummary(response) {
+
+            document
+            .getElementById("manageSummary")
+            .classList.remove("hidden");
+
+            document
+            .getElementById("manageTeamName")
+            .textContent =
+            response.team || "-";
+
+            document
+            .getElementById("manageTeamPoints")
+            .textContent =
+            formatPoints(
+                response.totalPoints || 0
+            );
+
+            document
+            .getElementById("manageTotalRecords")
+            .textContent =
+            response.totalRecords || 0;
+        }
+
+        function renderManageTable(records) {
+
+            const tableBody =
+            document.getElementById(
+                "manageTableBody"
+            );
+
+            tableBody.innerHTML = "";
+
+            if (!records.length) {
+
+                document
+                .getElementById("manageTableWrapper")
+                .classList.add("hidden");
+
+                document
+                .getElementById("manageEmptyMessage")
+                .classList.remove("hidden");
+
+                document
+                .getElementById("manageEmptyMessage")
+                .textContent =
+                "No point records have been recorded for this team.";
+
+                return;
+            }
+
+            document
+            .getElementById("manageEmptyMessage")
+            .classList.add("hidden");
+
+            document
+            .getElementById("manageTableWrapper")
+            .classList.remove("hidden");
+
+            records.forEach(record => {
+
+                const row =
+                document.createElement("tr");
+
+                const pointClass =
+                Number(record.points) >= 0
+                    ? "positive-points"
+                    : "negative-points";
+
+                row.innerHTML = `
+                    <td>${escapeHtml(formatUKDate(record.date))}</td>
+                    <td>${escapeHtml(record.team)}</td>
+                    <td>${escapeHtml(record.name)}</td>
+                    <td>${escapeHtml(record.reason)}</td>
+                    <td class="${pointClass}">
+                        ${escapeHtml(formatPoints(record.points))}
+                    </td>
+                    <td>${escapeHtml(record.by)}</td>
+                    <td>
+                        <div class="table-actions">
+                            <button
+                            class="edit-btn"
+                            type="button"
+                            data-action="edit"
+                            data-record-id="${escapeHtml(record.recordId)}">
+                                Edit
+                            </button>
+
+                            <button
+                            class="delete-btn"
+                            type="button"
+                            data-action="delete"
+                            data-record-id="${escapeHtml(record.recordId)}">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        function editPointRecord(recordId) {
+
+            const record =
+            state.manageRecords.find(item => {
+                return String(item.recordId) ===
+                    String(recordId);
+            });
+
+            if (!record) {
+                return;
+            }
+
+            state.editingRecordId =
+            record.recordId;
+
+            removeTemporaryOptions();
+            clearErrors();
+
+            document
+            .getElementById("entryTitle")
+            .textContent =
+            "Edit Team Point Record";
+
+            document
+            .getElementById("saveBtn")
+            .textContent =
+            "Update";
+
+            timestamp.value =
+            record.date;
+
+            teamField.value =
+            record.team;
+
+            reasons.value =
+            record.reason;
+
+            points.value =
+            record.points;
+
+            autoDeductRules.value = "";
+
+            selectStudentForEdit(
+                record.name,
+                record.team
+            );
+
+            selectStaffForEdit(
+                record.by
+            );
+
+            document
+            .getElementById("pointEntryModal")
+            .classList.add("show");
+
+            sessionStorage.setItem(
+                ENTRY_MODAL_STORAGE_KEY,
+                "true"
+            );
+        }
+
+        function selectStudentForEdit(
+        recordName,
+        recordTeam) {
+
+            const student =
+            state.students.find(item => {
+                return (
+                    normalizeText(item.name) ===
+                    normalizeText(recordName) &&
+
+                    normalizeText(item.team) ===
+                    normalizeText(recordTeam)
+                );
+            });
+
+            if (student) {
+                names.value =
+                student.id;
+
+                return;
+            }
+
+            const option =
+            document.createElement("option");
+
+            option.value =
+            "historical-student-" +
+            Date.now();
+
+            option.dataset.name =
+            recordName;
+
+            option.dataset.team =
+            recordTeam;
+
+            option.dataset.temporary =
+            "true";
+
+            option.textContent =
+            recordName;
+
+            names.appendChild(option);
+
+            names.value =
+            option.value;
+        }
+
+        function selectStaffForEdit(recordBy) {
+
+            const staff =
+            state.staff.find(item => {
+                return normalizeText(item.name) ===
+                    normalizeText(recordBy);
+            });
+
+            if (staff) {
+                signature.value =
+                staff.id;
+
+                return;
+            }
+
+            const option =
+            document.createElement("option");
+
+            option.value =
+            "historical-staff-" +
+            Date.now();
+
+            option.dataset.name =
+            recordBy;
+
+            option.dataset.temporary =
+            "true";
+
+            option.textContent =
+            recordBy;
+
+            signature.appendChild(option);
+
+            signature.value =
+            option.value;
+        }
+
+        function deletePointRecord(recordId) {
+
+            const record =
+            state.manageRecords.find(item => {
+                return String(item.recordId) ===
+                    String(recordId);
+            });
+
+            if (!record) {
+                return;
+            }
+
+            state.pendingDeleteRecordId =
+            record.recordId;
+
+            document
+            .getElementById("deleteRecordDate")
+            .textContent =
+            formatUKDate(record.date);
+
+            document
+            .getElementById("deleteRecordName")
+            .textContent =
+            record.name;
+
+            document
+            .getElementById("deleteRecordTeam")
+            .textContent =
+            record.team;
+
+            document
+            .getElementById("deleteRecordReason")
+            .textContent =
+            record.reason;
+
+            const pointDisplay =
+            document.getElementById(
+                "deleteRecordPoints"
+            );
+
+            pointDisplay.textContent =
+            formatPoints(record.points);
+
+            pointDisplay.className =
+            Number(record.points) >= 0
+                ? "positive-points"
+                : "negative-points";
+
+            document
+            .getElementById("deleteConfirmModal")
+            .classList.add("show");
+        }
+
+        function closeDeleteConfirmation() {
+
+            state.pendingDeleteRecordId = "";
+
+            document
+            .getElementById("deleteConfirmModal")
+            .classList.remove("show");
+        }
+
+        async function confirmDeletePoint() {
+
+            if (!state.pendingDeleteRecordId) {
+                closeDeleteConfirmation();
+                return;
+            }
+
+            const deleteId =
+            state.pendingDeleteRecordId;
+
+            closeDeleteConfirmation();
+
+            try {
+
+                const response =
+                await jsonpRequest({
+                    action: "deletePoint",
+                    recordId: deleteId
+                });
+
+                if (
+                    response &&
+                    response.success
+                ) {
+                    loadManageTeamPoints(true);
+
+                    if (
+                        state.activeSection ===
+                        "top"
+                    ) {
+                        loadTopPointEarners(true);
+                    }
+
+                } else {
+                    console.error(
+                        "Unable to delete Team Point record:",
+                        response
+                    );
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Unable to delete Team Point record:",
+                    error
+                );
+            }
+        }
+
+        async function loadTopPointEarners(silent = false) {
+
+            const period =
+            topPeriodSelect.value;
+
+            const requestData = {
+                action: "getTopPointEarners",
+                period: period
+            };
+
+            if (period === "weekly") {
+                requestData.referenceDate =
+                weeklyReferenceDate.value;
+            }
+
+            if (period === "monthly") {
+                requestData.referenceMonth =
+                monthlyReferenceMonth.value;
+            }
+
+            if (period === "termly") {
+                requestData.termId =
+                termSelect.value;
+            }
+
+            try {
+
+                const response =
+                await jsonpRequest(requestData);
+
+                if (!response.success) {
+                    throw new Error(
+                        response.message ||
+                        "Unable to load top point earners."
+                    );
+                }
+
+                document
+                .getElementById("topPeriodLabel")
+                .textContent =
+                `${response.label}: ${formatUKDate(response.startDate)} to ${formatUKDate(response.endDate)}`;
+
+                renderTopEarners(
+                    response.earners || []
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+                if (!silent) {
+
+                    document
+                    .getElementById("topTableWrapper")
+                    .classList.add("hidden");
+
+                    document
+                    .getElementById("topEmptyMessage")
+                    .classList.remove("hidden");
+                }
+            }
+        }
+
+        function renderTopEarners(earners) {
+
+            const tableBody =
+            document.getElementById(
+                "topTableBody"
+            );
+
+            tableBody.innerHTML = "";
+
+            if (!earners.length) {
+
+                document
+                .getElementById("topTableWrapper")
+                .classList.add("hidden");
+
+                document
+                .getElementById("topEmptyMessage")
+                .classList.remove("hidden");
+
+                document
+                .getElementById("topEmptyMessage")
+                .textContent =
+                "No point records were found for the selected period.";
+
+                return;
+            }
+
+            document
+            .getElementById("topEmptyMessage")
+            .classList.add("hidden");
+
+            document
+            .getElementById("topTableWrapper")
+            .classList.remove("hidden");
+
+            earners.forEach(earner => {
+
+                const row =
+                document.createElement("tr");
+
+                const pointClass =
+                Number(earner.points) >= 0
+                    ? "positive-points"
+                    : "negative-points";
+
+                row.innerHTML = `
+                    <td>${escapeHtml(earner.rank)}</td>
+                    <td>${escapeHtml(earner.name)}</td>
+                    <td>${escapeHtml(earner.team)}</td>
+                    <td class="${pointClass}">
+                        ${escapeHtml(formatPoints(earner.points))}
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+                /* ===============================================
+         * STATUS MESSAGES + GENERIC CONFIRMATION
+         * =============================================== */
+        const statusTimers = {};
+        function setStatus(elementId, message, type) {
+            const element =
+            document.getElementById(elementId);
+            element.textContent = message;
+            element.className = "status " + type;
+            clearTimeout(statusTimers[elementId]);
+            statusTimers[elementId] =
+            setTimeout(() => {
+                element.classList.add("hidden");
+            }, 8000);
+        }
+        function openGenericConfirm(options) {
+            state.pendingConfirm = options.onConfirm;
+            document.getElementById("confirmTitle").textContent = options.title;
+            document.getElementById("confirmMessage").textContent = options.message;
+            document.getElementById("confirmDetails").innerHTML =
+            options.details.map(pair => {
+                return `<div><strong>${escapeHtml(pair[0])}:</strong> ${escapeHtml(pair[1])}</div>`;
+            }).join("");
+            document.getElementById("genericConfirmBtn").textContent = options.buttonText;
+            document.getElementById("genericConfirmModal").classList.add("show");
+        }
+        function closeGenericConfirm() {
+            state.pendingConfirm = null;
+            document.getElementById("genericConfirmModal").classList.remove("show");
+        }
+        async function runGenericConfirm() {
+            const action = state.pendingConfirm;
+            closeGenericConfirm();
+            if (action) {
+                await action();
+            }
+        }
+        function showFieldError(fieldId, message) {
+            document.getElementById(fieldId).classList.add("error");
+            document.getElementById(fieldId + "-error").textContent = message;
+        }
+        function clearFieldErrors(ids) {
+            ids.forEach(id => {
+                document.getElementById(id).classList.remove("error");
+                document.getElementById(id + "-error").textContent = "";
+            });
+        }
+
+        /* ===============================================
+         * MANAGE TEAMS
+         * =============================================== */
+        /* ---- Generic multi-row grid (used by Students and Rules) ---- */
+        const ENTRY_GRIDS = {
+            students: {
+                containerId: "studentRows",
+                fields: [
+                    { key: "name", placeholder: "Student name", maxLength: 100 },
+                    { key: "team", placeholder: "Team (pick or type)", maxLength: 60, list: "teamOptions" }
+                ],
+                copyFromPrevious: ["team"]
+            },
+            rules: {
+                containerId: "ruleRows",
+                fields: [
+                    { key: "rule", placeholder: "e.g. Late to class", maxLength: 200 },
+                    { key: "points", placeholder: "e.g. 5", type: "number", min: "1", step: "1" }
+                ],
+                copyFromPrevious: []
+            }
+        };
+        function getEntryRows(gridName) {
+            const container = document.getElementById(ENTRY_GRIDS[gridName].containerId);
+            return Array.from(container.querySelectorAll(".entry-row")).map(element => {
+                const values = {};
+                element.querySelectorAll("input[data-field]").forEach(input => {
+                    values[input.dataset.field] = input.value;
+                });
+                return { element: element, values: values };
+            });
+        }
+        function addEntryRow(gridName, values, options) {
+            const grid = ENTRY_GRIDS[gridName];
+            const container = document.getElementById(grid.containerId);
+            const settings = options || {};
+            const existingRows = container.querySelectorAll(".entry-row");
+            const previous = settings.afterRow || existingRows[existingRows.length - 1];
+            const row = document.createElement("div");
+            row.className = "entry-row";
+            grid.fields.forEach(field => {
+                const input = document.createElement("input");
+                input.type = field.type || "text";
+                input.dataset.field = field.key;
+                input.placeholder = field.placeholder || "";
+                input.autocomplete = "off";
+                if (field.maxLength) { input.maxLength = field.maxLength; }
+                if (field.min) { input.min = field.min; }
+                if (field.step) { input.step = field.step; }
+                if (field.list) { input.setAttribute("list", field.list); }
+                let value = values && values[field.key];
+                if (value === undefined && previous && grid.copyFromPrevious.includes(field.key)) {
+                    const prevInput = previous.querySelector('input[data-field="' + field.key + '"]');
+                    value = prevInput ? prevInput.value : "";
+                }
+                input.value = value === undefined || value === null ? "" : value;
+                row.appendChild(input);
+            });
+            const remove = document.createElement("button");
+            remove.type = "button";
+            remove.className = "row-remove";
+            remove.title = "Remove this row";
+            remove.setAttribute("aria-label", "Remove this row");
+            remove.dataset.removeRow = "1";
+            remove.textContent = "\u00d7";
+            row.appendChild(remove);
+            if (settings.afterRow) {
+                container.insertBefore(row, settings.afterRow.nextSibling);
+            } else {
+                container.appendChild(row);
+            }
+            if (settings.focus !== false) {
+                row.querySelector("input").focus();
+            }
+            updateEntryCounts();
+            return row;
+        }
+        function resetEntryGrid(gridName, keepTeam) {
+            const container = document.getElementById(ENTRY_GRIDS[gridName].containerId);
+            const lastTeam = keepTeam ? (getEntryRows(gridName).slice(-1)[0] || { values: {} }).values.team : undefined;
+            container.innerHTML = "";
+            addEntryRow(gridName, lastTeam ? { team: lastTeam } : {}, { focus: false });
+        }
+        function markEntryError(row, fieldKey) {
+            const input = row.element.querySelector('input[data-field="' + fieldKey + '"]');
+            if (input) { input.classList.add("error"); }
+        }
+        function clearEntryErrors(gridName) {
+            document.getElementById(ENTRY_GRIDS[gridName].containerId)
+            .querySelectorAll(".error")
+            .forEach(input => input.classList.remove("error"));
+        }
+        function cleanCell(value) {
+            return String(value || "").replace(/\s+/g, " ").trim();
+        }
+        function updateEntryCounts() {
+            const studentTotal = getEntryRows("students")
+            .filter(row => cleanCell(row.values.name)).length;
+            document.getElementById("studentCount").textContent =
+            `${studentTotal} ${studentTotal === 1 ? "student" : "students"} ready to submit. Pick an existing team or type a new one.`;
+            const ruleTotal = getEntryRows("rules")
+            .filter(row => cleanCell(row.values.rule)).length;
+            document.getElementById("ruleCount").textContent =
+            `${ruleTotal} ${ruleTotal === 1 ? "rule" : "rules"} ready to submit. Enter a positive number: it is saved as a deduction (5 becomes -5).`;
+        }
+        function chunkRows(rows, maxEncodedLength) {
+            const chunks = [];
+            let current = [];
+            rows.forEach(row => {
+                const test = current.concat([row]);
+                if (current.length && encodeURIComponent(JSON.stringify(test)).length > maxEncodedLength) {
+                    chunks.push(current);
+                    current = [row];
+                } else {
+                    current = test;
+                }
+            });
+            if (current.length) { chunks.push(current); }
+            return chunks;
+        }
+        function setupEntryGridListeners(gridName) {
+            const grid = ENTRY_GRIDS[gridName];
+            const container = document.getElementById(grid.containerId);
+            container.addEventListener("input", function (event) {
+                event.target.classList.remove("error");
+                updateEntryCounts();
+            });
+            container.addEventListener("click", function (event) {
+                const button = event.target.closest("button[data-remove-row]");
+                if (!button) { return; }
+                const row = button.closest(".entry-row");
+                if (container.querySelectorAll(".entry-row").length === 1) {
+                    row.querySelectorAll("input").forEach(input => { input.value = ""; input.classList.remove("error"); });
+                } else {
+                    row.remove();
+                }
+                updateEntryCounts();
+            });
+            container.addEventListener("keydown", function (event) {
+                if (event.key !== "Enter" || !event.target.matches("input[data-field]")) { return; }
+                event.preventDefault();
+                const row = event.target.closest(".entry-row");
+                const inputs = Array.from(row.querySelectorAll("input[data-field]"));
+                const index = inputs.indexOf(event.target);
+                if (index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                    return;
+                }
+                const nextRow = row.nextElementSibling;
+                if (nextRow) {
+                    nextRow.querySelector("input").focus();
+                } else {
+                    addEntryRow(gridName);
+                }
+            });
+        }
+        /* Pasting a list of names (one per line, or "Name<TAB>Team" from a sheet) fills several rows at once. */
+        function handleStudentPaste(event) {
+            const input = event.target;
+            if (!input.matches('input[data-field="name"]')) { return; }
+            const text = (event.clipboardData || window.clipboardData).getData("text");
+            if (!/\r?\n/.test(text.trim())) { return; }
+            event.preventDefault();
+            const currentRow = input.closest(".entry-row");
+            const defaultTeam = currentRow.querySelector('input[data-field="team"]').value;
+            const lines = text.split(/\r?\n/)
+            .map(line => line.replace(/^\s*\d+\s*[.)\-]\s+/, ""))
+            .filter(line => line.trim());
+            let anchor = currentRow;
+            lines.forEach((line, index) => {
+                const parts = line.split("\t");
+                const name = cleanCell(parts[0]);
+                const team = cleanCell(parts[1]) || defaultTeam;
+                if (index === 0) {
+                    input.value = name;
+                    currentRow.querySelector('input[data-field="team"]').value = team;
+                } else {
+                    anchor = addEntryRow("students", { name: name, team: team }, { afterRow: anchor, focus: false });
+                }
+            });
+            updateEntryCounts();
+        }
+        /* ---- Students ---- */
+        function populateTeamOptions() {
+            const list = document.getElementById("teamOptions");
+            list.innerHTML = "";
+            state.teams.forEach(team => {
+                const option = document.createElement("option");
+                option.value = team;
+                list.appendChild(option);
+            });
+        }
+        function clearStudents() {
+            resetEntryGrid("students", false);
+            document.getElementById("studentsError").textContent = "";
+        }
+        function closeStudentsPanel() {
+            document.getElementById("studentsPanel").classList.add("hidden");
+            document.getElementById("openStudentsBtn").classList.remove("hidden");
+        }
+        function openStudentsPanel() {
+            document.getElementById("studentsPanel").classList.remove("hidden");
+            document.getElementById("openStudentsBtn").classList.add("hidden");
+            const rows = getEntryRows("students");
+            const last = rows[rows.length - 1];
+            if (last) { last.element.querySelector("input").focus(); }
+        }
+        async function submitStudents() {
+            clearEntryErrors("students");
+            const errorBox = document.getElementById("studentsError");
+            errorBox.textContent = "";
+            const entries = [];
+            let problem = "";
+            getEntryRows("students").forEach((row, index) => {
+                const name = cleanCell(row.values.name);
+                const team = cleanCell(row.values.team);
+                if (!name && !team) { return; }
+                if (!name) {
+                    markEntryError(row, "name");
+                    problem = problem || `Row ${index + 1}: enter the student's name.`;
+                }
+                if (!team) {
+                    markEntryError(row, "team");
+                    problem = problem || `Row ${index + 1}: enter or pick a team.`;
+                }
+                if (name && team) { entries.push([name, team]); }
+            });
+            if (!problem && !entries.length) {
+                problem = "Add at least one student.";
+            }
+            if (problem) {
+                errorBox.textContent = problem;
+                return;
+            }
+            const button = document.getElementById("submitStudentsBtn");
+            button.disabled = true;
+            button.textContent = "Saving...";
+            let added = 0;
+            let skipped = 0;
+            const newTeams = new Set();
+            try {
+                for (const chunk of chunkRows(entries, 3200)) {
+                    const response = await jsonpRequest({
+                        action: "addStudents",
+                        students: JSON.stringify(chunk)
+                    });
+                    if (!response.success) {
+                        throw new Error(response.message || "Unable to add the students.");
+                    }
+                    added += response.added || 0;
+                    skipped += response.skipped || 0;
+                    (response.newTeams || []).forEach(team => newTeams.add(team));
+                }
+                let message = `${added} ${added === 1 ? "student" : "students"} added.`;
+                if (newTeams.size) {
+                    message += ` New ${newTeams.size === 1 ? "team" : "teams"}: ${Array.from(newTeams).join(", ")}.`;
+                }
+                if (skipped) {
+                    message += ` ${skipped} skipped (already in that team).`;
+                }
+                setStatus("teamsStatus", message, "success");
+                resetEntryGrid("students", true);
+                await Promise.all([loadFormData(true), loadTeamsOverview(true)]);
+            } catch (error) {
+                const saved = added ? ` ${added} saved before the problem; press Submit again and those will be skipped.` : "";
+                setStatus("teamsStatus", error.message + saved, "error");
+            } finally {
+                button.disabled = false;
+                button.textContent = "Submit";
+            }
+        }
+        async function loadTeamsOverview(silent = false) {
+            try {
+                const response = await jsonpRequest({ action: "getTeamsOverview" });
+                if (!response.success) {
+                    throw new Error(response.message || "Unable to load teams.");
+                }
+                state.teamsOverview = response.teams || [];
+                renderTeamsTable();
+            } catch (error) {
+                console.error(error);
+                if (!silent) {
+                    setStatus("teamsStatus", error.message, "error");
+                }
+            }
+        }
+        function renderTeamsTable() {
+            const body = document.getElementById("teamsTableBody");
+            const wrapper = document.getElementById("teamsTableWrapper");
+            const empty = document.getElementById("teamsEmptyMessage");
+            body.innerHTML = "";
+            if (!state.teamsOverview.length) {
+                wrapper.classList.add("hidden");
+                empty.classList.remove("hidden");
+                empty.textContent = "No teams yet. Create your first team above.";
+                return;
+            }
+            empty.classList.add("hidden");
+            wrapper.classList.remove("hidden");
+            state.teamsOverview.forEach(team => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td><strong>${escapeHtml(team.team)}</strong></td>
+                    <td class="members-cell">${escapeHtml(team.members.join(", "))}</td>
+                    <td>${escapeHtml(team.members.length)}</td>
+                    <td>${escapeHtml(team.recordCount)}</td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="delete-btn" type="button" data-team="${escapeHtml(team.team)}">Delete</button>
+                        </div>
+                    </td>
+                `;
+                body.appendChild(row);
+            });
+        }
+        function deleteTeamPrompt(teamName) {
+            const team = state.teamsOverview.find(item => item.team === teamName);
+            if (!team) {
+                return;
+            }
+            openGenericConfirm({
+                title: "Delete Team",
+                message: "This permanently deletes the team, all its members and all its point records. This action cannot be undone.",
+                details: [
+                    ["Team", team.team],
+                    ["Members", team.members.length],
+                    ["Point records", team.recordCount]
+                ],
+                buttonText: "Delete Team",
+                onConfirm: () => deleteTeam(team.team)
+            });
+        }
+        async function deleteTeam(teamName) {
+            try {
+                const response =
+                await jsonpRequest({ action: "deleteTeam", team: teamName });
+                if (!response.success) {
+                    throw new Error(response.message || "Unable to delete the team.");
+                }
+                setStatus("teamsStatus", response.message, "success");
+                if (normalizeText(viewTeamSelect.value) === normalizeText(teamName)) {
+                    viewTeamSelect.value = "";
+                    resetViewSection();
+                }
+                if (normalizeText(manageTeamSelect.value) === normalizeText(teamName)) {
+                    manageTeamSelect.value = "";
+                    resetManageSection();
+                }
+            } catch (error) {
+                setStatus("teamsStatus", error.message, "error");
+            }
+            await Promise.all([loadFormData(true), loadTeamsOverview(true)]);
+        }
+
+        /* ===============================================
+         * MANAGE RULES
+         * =============================================== */
+        function clearRules() {
+            resetEntryGrid("rules", false);
+            document.getElementById("rulesError").textContent = "";
+        }
+        async function submitRules() {
+            clearEntryErrors("rules");
+            const errorBox = document.getElementById("rulesError");
+            errorBox.textContent = "";
+            const entries = [];
+            const seen = new Set(state.rules.map(item => normalizeText(item.rule)));
+            let problem = "";
+            getEntryRows("rules").forEach((row, index) => {
+                const rule = cleanCell(row.values.rule);
+                const pointsText = String(row.values.points || "").trim();
+                if (!rule && !pointsText) { return; }
+                const deduction = Math.abs(Number(pointsText));
+                if (!rule) {
+                    markEntryError(row, "rule");
+                    problem = problem || `Row ${index + 1}: enter the rule.`;
+                } else if (seen.has(normalizeText(rule))) {
+                    markEntryError(row, "rule");
+                    problem = problem || `Row ${index + 1}: "${rule}" already exists or is repeated.`;
+                }
+                if (pointsText === "" || !Number.isFinite(deduction) || deduction === 0) {
+                    markEntryError(row, "points");
+                    problem = problem || `Row ${index + 1}: enter points greater than zero.`;
+                }
+                if (rule) { seen.add(normalizeText(rule)); }
+                if (rule && pointsText !== "" && Number.isFinite(deduction) && deduction !== 0) {
+                    entries.push([rule, deduction]);
+                }
+            });
+            if (!problem && !entries.length) {
+                problem = "Add at least one rule.";
+            }
+            if (problem) {
+                errorBox.textContent = problem;
+                return;
+            }
+            const button = document.getElementById("submitRulesBtn");
+            button.disabled = true;
+            button.textContent = "Saving...";
+            let added = 0;
+            let skipped = 0;
+            try {
+                for (const chunk of chunkRows(entries, 3200)) {
+                    const response = await jsonpRequest({
+                        action: "addRules",
+                        rules: JSON.stringify(chunk)
+                    });
+                    if (!response.success) {
+                        throw new Error(response.message || "Unable to add the rules.");
+                    }
+                    added += response.added || 0;
+                    skipped += response.skipped || 0;
+                }
+                let message = `${added} ${added === 1 ? "rule" : "rules"} added.`;
+                if (skipped) {
+                    message += ` ${skipped} skipped (rule already exists).`;
+                }
+                setStatus("rulesStatus", message, "success");
+                resetEntryGrid("rules", false);
+                await loadFormData(true);
+            } catch (error) {
+                const saved = added ? ` ${added} saved before the problem; press Submit again and those will be skipped.` : "";
+                setStatus("rulesStatus", error.message + saved, "error");
+            } finally {
+                button.disabled = false;
+                button.textContent = "Submit";
+            }
+        }
+        function renderRulesTable() {
+            const body = document.getElementById("rulesTableBody");
+            const wrapper = document.getElementById("rulesTableWrapper");
+            const empty = document.getElementById("rulesEmptyMessage");
+            body.innerHTML = "";
+            if (!state.rules.length) {
+                wrapper.classList.add("hidden");
+                empty.classList.remove("hidden");
+                return;
+            }
+            empty.classList.add("hidden");
+            wrapper.classList.remove("hidden");
+            state.rules.forEach(item => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${escapeHtml(item.rule)}</td>
+                    <td class="negative-points">${escapeHtml(formatPoints(item.points))}</td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="delete-btn" type="button" data-rule-id="${escapeHtml(item.id)}">Delete</button>
+                        </div>
+                    </td>
+                `;
+                body.appendChild(row);
+            });
+        }
+        function deleteRulePrompt(ruleId) {
+            const item = state.rules.find(rule => String(rule.id) === String(ruleId));
+            if (!item) {
+                return;
+            }
+            openGenericConfirm({
+                title: "Delete Rule",
+                message: "This rule will no longer appear in the Auto Deduct Rules list. Points already recorded are not changed.",
+                details: [
+                    ["Rule", item.rule],
+                    ["Points", formatPoints(item.points)]
+                ],
+                buttonText: "Delete Rule",
+                onConfirm: () => deleteRule(item.id, item.rule)
+            });
+        }
+        async function deleteRule(ruleId, ruleText) {
+            try {
+                const response =
+                await jsonpRequest({ action: "deleteRule", ruleId: ruleId, rule: ruleText });
+                if (!response.success) {
+                    throw new Error(response.message || "Unable to delete the rule.");
+                }
+                setStatus("rulesStatus", response.message, "success");
+            } catch (error) {
+                setStatus("rulesStatus", error.message, "error");
+            }
+            await loadFormData(true);
+        }
+
+                /* ===============================================
+         * MANAGE STAFF
+         * =============================================== */
+        function clearStaffForm() {
+            document.getElementById("newStaffName").value = "";
+            document.getElementById("newStaffRole").value = "Teacher";
+            clearFieldErrors(["newStaffName", "newStaffRole"]);
+        }
+        async function addStaff() {
+            clearFieldErrors(["newStaffName", "newStaffRole"]);
+            const name =
+            document.getElementById("newStaffName").value.replace(/\s+/g, " ").trim();
+            const role =
+            document.getElementById("newStaffRole").value.replace(/\s+/g, " ").trim() || "Teacher";
+            if (!name) {
+                showFieldError("newStaffName", "Name is required.");
+                return;
+            }
+            if (state.staff.some(item => normalizeText(item.name) === normalizeText(name))) {
+                showFieldError("newStaffName", "This person is already in the staff list.");
+                return;
+            }
+            const button = document.getElementById("addStaffBtn");
+            button.disabled = true;
+            button.textContent = "Adding...";
+            try {
+                const response =
+                await jsonpRequest({ action: "addStaff", name: name, role: role });
+                if (!response.success) {
+                    throw new Error(response.message || "Unable to add staff.");
+                }
+                setStatus("staffStatus", response.message, "success");
+                clearStaffForm();
+                await loadFormData(true);
+            } catch (error) {
+                setStatus("staffStatus", error.message, "error");
+            } finally {
+                button.disabled = false;
+                button.textContent = "Add Staff";
+            }
+        }
+        function renderStaffTable() {
+            const body = document.getElementById("staffTableBody");
+            const wrapper = document.getElementById("staffTableWrapper");
+            const empty = document.getElementById("staffEmptyMessage");
+            body.innerHTML = "";
+            if (!state.staff.length) {
+                wrapper.classList.add("hidden");
+                empty.classList.remove("hidden");
+                return;
+            }
+            empty.classList.add("hidden");
+            wrapper.classList.remove("hidden");
+            state.staff.forEach(item => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${escapeHtml(item.name)}</td>
+                    <td>${escapeHtml(item.role)}</td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="delete-btn" type="button" data-staff-id="${escapeHtml(item.id)}">Remove</button>
+                        </div>
+                    </td>
+                `;
+                body.appendChild(row);
+            });
+        }
+        function deleteStaffPrompt(staffId) {
+            const item = state.staff.find(person => String(person.id) === String(staffId));
+            if (!item) {
+                return;
+            }
+            openGenericConfirm({
+                title: "Remove Staff",
+                message: "This person will no longer appear in the \"By\" list. Point records they already made keep their name.",
+                details: [
+                    ["Name", item.name],
+                    ["Role", item.role || "-"]
+                ],
+                buttonText: "Remove Staff",
+                onConfirm: () => deleteStaff(item.id, item.name)
+            });
+        }
+        async function deleteStaff(staffId, staffName) {
+            try {
+                const response =
+                await jsonpRequest({ action: "deleteStaff", staffId: staffId, name: staffName });
+                if (!response.success) {
+                    throw new Error(response.message || "Unable to remove staff.");
+                }
+                setStatus("staffStatus", response.message, "success");
+            } catch (error) {
+                setStatus("staffStatus", error.message, "error");
+            }
+            await loadFormData(true);
+        }
+
+
+        function setManagementListeners() {
+            setupEntryGridListeners("students");
+            setupEntryGridListeners("rules");
+            document.getElementById("studentRows")
+            .addEventListener("paste", handleStudentPaste);
+            resetEntryGrid("students", false);
+            resetEntryGrid("rules", false);
+            document.getElementById("teamsTableBody")
+            .addEventListener("click", function (event) {
+                const button = event.target.closest("button[data-team]");
+                if (button) {
+                    deleteTeamPrompt(button.dataset.team);
+                }
+            });
+            document.getElementById("staffTableBody")
+            .addEventListener("click", function (event) {
+                const button = event.target.closest("button[data-staff-id]");
+                if (button) {
+                    deleteStaffPrompt(button.dataset.staffId);
+                }
+            });
+            document.getElementById("rulesTableBody")
+            .addEventListener("click", function (event) {
+                const button = event.target.closest("button[data-rule-id]");
+                if (button) {
+                    deleteRulePrompt(button.dataset.ruleId);
+                }
+            });
+        }
+
+
+        function jsonpRequest(parameters) {
+
+            return new Promise((resolve, reject) => {
+
+                const callbackName =
+                "teamPointCallback" +
+                Date.now() +
+                state.jsonpCounter++;
+
+                const script =
+                document.createElement("script");
+
+                const queryParts = [];
+
+                Object.keys(parameters)
+                .forEach(key => {
+
+                    queryParts.push(
+                        encodeURIComponent(key) +
+                        "=" +
+                        encodeURIComponent(
+                            parameters[key] ?? ""
+                        )
+                    );
+                });
+
+                queryParts.push(
+                    "callback=" +
+                    encodeURIComponent(callbackName)
+                );
+
+                queryParts.push(
+                    "_=" +
+                    Date.now()
+                );
+
+                const separator =
+                WEB_APP_URL.includes("?")
+                    ? "&"
+                    : "?";
+
+                let completed =
+                false;
+
+                const cleanup = () => {
+
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(
+                            script
+                        );
+                    }
+
+                    try {
+                        delete window[callbackName];
+                    } catch (error) {
+                        window[callbackName] =
+                        undefined;
+                    }
+                };
+
+                const timeout =
+                setTimeout(() => {
+
+                    if (completed) {
+                        return;
+                    }
+
+                    completed = true;
+
+                    cleanup();
+
+                    reject(
+                        new Error(
+                            "The server took too long to respond."
+                        )
+                    );
+
+                }, 30000);
+
+                window[callbackName] =
+                function (response) {
+
+                    if (completed) {
+                        return;
+                    }
+
+                    completed = true;
+
+                    clearTimeout(timeout);
+
+                    cleanup();
+
+                    resolve(response);
+                };
+
+                script.onerror =
+                function () {
+
+                    if (completed) {
+                        return;
+                    }
+
+                    completed = true;
+
+                    clearTimeout(timeout);
+
+                    cleanup();
+
+                    reject(
+                        new Error(
+                            "Unable to connect to the Team Point server."
+                        )
+                    );
+                };
+
+                script.src =
+                WEB_APP_URL +
+                separator +
+                queryParts.join("&");
+
+                document.head.appendChild(script);
+            });
+        }
+
+        function formatUKDate(dateValue) {
+
+            if (!dateValue) {
+                return "";
+            }
+
+            const parts =
+            String(dateValue).split("-");
+
+            if (parts.length !== 3) {
+                return dateValue;
+            }
+
+            return (
+                parts[2] +
+                "/" +
+                parts[1] +
+                "/" +
+                parts[0]
+            );
+        }
+
+        function formatPoints(value) {
+
+            const number =
+            Number(value || 0);
+
+            return number > 0
+                ? `+${number}`
+                : `${number}`;
+        }
+
+        function normalizeText(value) {
+
+            return String(value ?? "")
+            .trim()
+            .toLowerCase();
+        }
+
+        function escapeHtml(value) {
+
+            return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
         }
 
     </script>
 
 </body>
-
 </html>
